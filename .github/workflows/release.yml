@@ -1,18 +1,21 @@
 name: release
-# Push a tag like v0.1.0 to build static binaries, .deb/.rpm/Arch packages, a GitHub release,
-# and the signed apt + dnf repositories on GitHub Pages (gh-pages branch).
+# Push a tag like v0.1.0 to build static binaries and .deb/.rpm/Arch packages, then (in a separate
+# job that alone holds the signing key) sign them, publish the GitHub release, and update the signed
+# apt + dnf repositories on GitHub Pages (gh-pages branch).
 on:
   push:
     tags: ['v*']
 
 permissions:
-  contents: write
+  contents: read
 
 env:
   NFPM_VERSION: 2.48.0
+  NFPM_SHA256: 6d7f9a28b2f397934403950fcbba83f598b08d02edbe79a0815b3b4897341750
 
 jobs:
   build:
+    # No secrets in this job: it runs third-party tooling.
     runs-on: ubuntu-24.04
     strategy:
       matrix:
@@ -23,8 +26,10 @@ jobs:
             arch: arm64
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: taiki-e/install-action@v2
+      - uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # stable, 2026-10-16
+        with:
+          toolchain: stable
+      - uses: taiki-e/install-action@c509219cf42fba86913069efd0ade2458c59337b # v2.90.1
         with:
           tool: cross
       - name: Build static binary
@@ -33,28 +38,20 @@ jobs:
         run: |
           mkdir -p dist
           cargo run --release --locked --quiet -- --udev-rules > dist/70-whiskerd.rules
-      - name: Install nfpm
+      - name: Install nfpm (checksum-verified)
         run: |
-          curl -fsSL "https://github.com/goreleaser/nfpm/releases/download/v${NFPM_VERSION}/nfpm_${NFPM_VERSION}_Linux_x86_64.tar.gz" \
-            | sudo tar -xz -C /usr/local/bin nfpm
+          curl -fsSL -o "$RUNNER_TEMP/nfpm.tgz" \
+            "https://github.com/goreleaser/nfpm/releases/download/v${NFPM_VERSION}/nfpm_${NFPM_VERSION}_Linux_x86_64.tar.gz"
+          echo "${NFPM_SHA256}  $RUNNER_TEMP/nfpm.tgz" | sha256sum -c -
+          sudo tar -xzf "$RUNNER_TEMP/nfpm.tgz" -C /usr/local/bin nfpm
       - name: Build packages
-        env:
-          SIGNING_KEY: ${{ secrets.PKG_GPG_PRIVATE_KEY }}
         run: |
           export VERSION="${GITHUB_REF_NAME#v}" ARCH="${{ matrix.arch }}"
-          export BIN="target/${{ matrix.target }}/release/whiskerd"
-          export NFPM_PASSPHRASE=""
-          if [ -n "$SIGNING_KEY" ]; then
-            printf '%s\n' "$SIGNING_KEY" > "$RUNNER_TEMP/key.asc"
-            export RPM_SIGNING_KEY_FILE="$RUNNER_TEMP/key.asc"
-          else
-            export RPM_SIGNING_KEY_FILE=""
-          fi
+          export BIN="target/${{ matrix.target }}/release/whiskerd" RPM_SIGNING_KEY_FILE=""
           for p in deb rpm archlinux; do
             nfpm package --config packaging/nfpm.yaml --packager "$p" --target dist/
           done
           cp "$BIN" "dist/whiskerd-${VERSION}-${{ matrix.target }}"
-          rm -f "$RUNNER_TEMP/key.asc"
           ls -l dist
       - uses: actions/upload-artifact@v4
         with:
@@ -65,24 +62,12 @@ jobs:
             dist/*.pkg.tar.zst
             dist/whiskerd-*
 
-  release:
+  publish:
+    # The only job with the signing key. Uses GitHub's own actions and distro tools only.
     needs: build
     runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          path: dist
-          merge-multiple: true
-      - name: Create GitHub release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          cd dist && sha256sum * > SHA256SUMS
-          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --generate-notes ./*
-
-  repo:
-    needs: build
-    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -90,15 +75,33 @@ jobs:
           path: dist
           merge-multiple: true
       - name: Install repo tools
-        run: sudo apt-get update && sudo apt-get install -y apt-utils createrepo-c
+        run: sudo apt-get update && sudo apt-get install -y apt-utils createrepo-c rpm
       - name: Import signing key
         env:
           SIGNING_KEY: ${{ secrets.PKG_GPG_PRIVATE_KEY }}
-        run: printf '%s\n' "$SIGNING_KEY" | gpg --batch --import
+        run: |
+          test -n "$SIGNING_KEY" || { echo "PKG_GPG_PRIVATE_KEY secret is missing (run packaging/setup-signing-key.sh)"; exit 1; }
+          printf '%s\n' "$SIGNING_KEY" | gpg --batch --import
+          FPR="$(gpg --list-secret-keys --with-colons | awk -F: '/^fpr/ {print $10; exit}')"
+          echo "FPR=$FPR" >> "$GITHUB_ENV"
+      - name: Sign RPMs
+        run: |
+          for f in dist/*.rpm; do
+            rpmsign --addsign \
+              --define "_gpg_name $FPR" \
+              --define "_gpg_sign_cmd_extra_args --pinentry-mode loopback --batch" \
+              "$f"
+          done
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd dist && sha256sum ./* > SHA256SUMS
+          gpg --batch --yes --armor --detach-sign SHA256SUMS
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --generate-notes ./*
       - name: Check out gh-pages
         run: |
-          git fetch origin gh-pages:gh-pages 2>/dev/null || true
-          if git show-ref --quiet refs/heads/gh-pages; then
+          if git fetch origin gh-pages:gh-pages 2>/dev/null; then
             git worktree add site gh-pages
           else
             git worktree add --orphan -b gh-pages site
@@ -107,40 +110,41 @@ jobs:
         run: |
           set -euo pipefail
           cp packaging/repo/index.html site/index.html
-          gpg --armor --export > site/whiskerd.asc
+          gpg --armor --export "$FPR" > site/whiskerd.asc
 
-          # apt
+          # apt: one "stable" suite, component "main"
           mkdir -p site/apt/pool/main/w/whiskerd
           cp dist/*.deb site/apt/pool/main/w/whiskerd/
-          cd site/apt
-          for arch in amd64 arm64; do
-            mkdir -p "dists/stable/main/binary-$arch"
-            apt-ftparchive --arch "$arch" packages pool > "dists/stable/main/binary-$arch/Packages"
-            gzip -kf9 "dists/stable/main/binary-$arch/Packages"
-          done
-          apt-ftparchive \
-            -o APT::FTPArchive::Release::Origin=whiskerd \
-            -o APT::FTPArchive::Release::Label=whiskerd \
-            -o APT::FTPArchive::Release::Suite=stable \
-            -o APT::FTPArchive::Release::Codename=stable \
-            -o "APT::FTPArchive::Release::Architectures=amd64 arm64" \
-            -o APT::FTPArchive::Release::Components=main \
-            release dists/stable > dists/stable/Release.new
-          mv dists/stable/Release.new dists/stable/Release
-          gpg --batch --yes --clearsign -o dists/stable/InRelease dists/stable/Release
-          gpg --batch --yes -abs -o dists/stable/Release.gpg dists/stable/Release
-          cd ../..
+          (
+            cd site/apt
+            for arch in amd64 arm64; do
+              mkdir -p "dists/stable/main/binary-$arch"
+              apt-ftparchive --arch "$arch" packages pool > "dists/stable/main/binary-$arch/Packages"
+              gzip -kf9 "dists/stable/main/binary-$arch/Packages"
+            done
+            apt-ftparchive \
+              -o APT::FTPArchive::Release::Origin=whiskerd \
+              -o APT::FTPArchive::Release::Label=whiskerd \
+              -o APT::FTPArchive::Release::Suite=stable \
+              -o APT::FTPArchive::Release::Codename=stable \
+              -o "APT::FTPArchive::Release::Architectures=amd64 arm64" \
+              -o APT::FTPArchive::Release::Components=main \
+              release dists/stable > "$RUNNER_TEMP/Release"
+            mv "$RUNNER_TEMP/Release" dists/stable/Release
+            gpg --batch --yes -u "$FPR" --clearsign -o dists/stable/InRelease dists/stable/Release
+            gpg --batch --yes -u "$FPR" -abs -o dists/stable/Release.gpg dists/stable/Release
+          )
 
-          # dnf
+          # dnf: one repo per architecture ($basearch)
           for arch in x86_64 aarch64; do
             mkdir -p "site/rpm/$arch"
             cp dist/*."$arch".rpm "site/rpm/$arch/"
             createrepo_c --update "site/rpm/$arch"
-            gpg --batch --yes --armor --detach-sign "site/rpm/$arch/repodata/repomd.xml"
+            gpg --batch --yes -u "$FPR" --armor --detach-sign "site/rpm/$arch/repodata/repomd.xml"
           done
           cp packaging/repo/whiskerd.repo site/rpm/whiskerd.repo
           touch site/.nojekyll
-      - name: Publish
+      - name: Publish gh-pages
         run: |
           cd site
           git config user.name "github-actions[bot]"
