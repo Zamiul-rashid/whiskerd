@@ -6,7 +6,7 @@
 name = "Compx receivers"
 ids = ["248a:5b2f"]
 receiver = "SSCYPL Wireless-Receiver"
-how = "whiskerd asks the receiver for the status every 5 minutes. A sleeping mouse is not woken."
+how = "whiskerd asks the receiver every 5 minutes and shows the highest reading of the last 45 minutes, because these mice report a voltage-based level that sags in use. A sleeping mouse is not woken."
 cable = "The same mice by cable: 248a:5b2e, 331a:5024."
 
 [[groups.mice]]

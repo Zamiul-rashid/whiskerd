@@ -73,7 +73,7 @@ git clone https://github.com/Zamiul-rashid/whiskerd && cd whiskerd
 
 | Family | How the battery is read |
 |---|---|
-| Compx (`248a:5b2f` ...) | Feature report `0x0C`, command `0x20` (status), sent every 5 minutes, or every 30 seconds while the mouse sleeps. A sleeping mouse is not woken: only the receiver answers. |
+| Compx (`248a:5b2f` ...) | Feature report `0x0C`, command `0x20` (status), sent every 5 minutes, or every 30 seconds while the mouse sleeps. A sleeping mouse is not woken: only the receiver answers. These mice turn battery voltage into a percentage, which sags while the mouse is in use, so whiskerd shows the highest reading of the last 45 minutes (at most 16 readings are kept). |
 | Keychron Link (`3434:d031` ...) | The receiver does **not** answer battery requests. It pushes `54 e2 01 01 00 <pct> 02 02` whenever the mouse connects or wakes, and whiskerd listens for it. Right after login, the Keychron value appears the first time you use the mouse. |
 | Kernel | Reads `/sys/class/power_supply/*/capacity`, updated on kernel change events. |
 

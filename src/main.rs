@@ -6,6 +6,7 @@ mod drivers;
 mod hidraw;
 mod netlink;
 mod power_supply;
+mod smooth;
 mod state;
 
 use std::fs::File;
@@ -59,6 +60,8 @@ struct Hid {
     slots_known: bool,
     /// Set after logging an error, so a broken device logs once, not every poll.
     warned: bool,
+    /// Compx: recent readings, so the highest of the last 45 minutes is shown.
+    peak: smooth::PeakHold,
 }
 
 impl Hid {
@@ -82,7 +85,8 @@ impl Hid {
         match hidraw::compx_query(&self.found.devnode, seq) {
             Ok(Some((r, tag))) => {
                 self.state.name = compx::model_name(&tag);
-                self.state.apply(r, now());
+                let shown = self.peak.push(r, Instant::now());
+                self.state.apply(shown, now());
                 self.warned = false;
             }
             Ok(None) => self.state.connected = false, // mouse asleep or out of range; keep last value
@@ -208,6 +212,7 @@ impl Daemon {
                 events: None,
                 slots_known: false,
                 warned: false,
+                peak: smooth::PeakHold::default(),
             };
             let seq = self.next_seq();
             h.refresh(seq);
