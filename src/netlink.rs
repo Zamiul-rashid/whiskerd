@@ -56,6 +56,12 @@ pub fn drain(fd: &OwnedFd) -> Changes {
     let mut buf = [0u8; 8192];
     loop {
         let n = unsafe { libc::recv(fd.as_raw_fd(), buf.as_mut_ptr().cast(), buf.len(), 0) };
+        if n < 0 && io::Error::last_os_error().raw_os_error() == Some(libc::ENOBUFS) {
+            // The socket overflowed and events were lost: rescan everything.
+            out.hidraw = true;
+            out.power_supply = true;
+            continue;
+        }
         if n <= 0 {
             return out;
         }

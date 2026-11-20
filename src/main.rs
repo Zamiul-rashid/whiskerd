@@ -55,6 +55,8 @@ struct Hid {
     state: DeviceState,
     /// Keychron: open interface 1 that receives pushed battery events.
     events: Option<File>,
+    /// Keychron: the interface-3 slot query has answered at least once.
+    slots_known: bool,
     /// Set after logging an error, so a broken device logs once, not every poll.
     warned: bool,
 }
@@ -68,7 +70,7 @@ impl Hid {
         self.warned = true;
         if is_access_error(e) {
             eprintln!(
-                "whiskerd: no access to {} (install the udev rule: whiskerd --udev-rules)",
+                "whiskerd: no access to {} yet (if this persists, install the udev rule: whiskerd --udev-rules)",
                 self.found.devnode.display()
             );
         } else {
@@ -98,6 +100,8 @@ impl Hid {
             Ok(Some((pid, connected))) => {
                 self.state.name = keychron::model_name(pid).into();
                 self.state.connected = connected;
+                self.slots_known = true;
+                self.warned = false;
             }
             Ok(None) => {}
             Err(e) => self.fail("slot query", &e),
@@ -106,7 +110,10 @@ impl Hid {
 
     fn open_events(&mut self) {
         match hidraw::open(&self.found.devnode, false) {
-            Ok(f) => self.events = Some(f),
+            Ok(f) => {
+                self.events = Some(f);
+                self.warned = false;
+            }
             Err(e) => self.fail("open", &e),
         }
     }
@@ -133,6 +140,13 @@ impl Hid {
                 }
             }
         }
+    }
+
+    /// A Keychron receiver whose setup did not complete (e.g. the uaccess ACL was not applied yet
+    /// at login, or interface 3 appeared after interface 1 during hotplug).
+    fn needs_setup(&self) -> bool {
+        self.found.rx.protocol == Protocol::KeychronLink
+            && (self.events.is_none() || !self.slots_known)
     }
 
     /// Periodic refresh.
@@ -192,6 +206,7 @@ impl Daemon {
                 found: f,
                 state,
                 events: None,
+                slots_known: false,
                 warned: false,
             };
             let seq = self.next_seq();
@@ -206,7 +221,16 @@ impl Daemon {
     }
 
     fn rescan_power(&mut self) {
-        self.power = power_supply::scan(CLASS_POWER.as_ref(), now());
+        let mut fresh = power_supply::scan(CLASS_POWER.as_ref(), now());
+        // Keep the old timestamp while nothing changed, so the file is only rewritten on change.
+        for d in &mut fresh {
+            if let Some(old) = self.power.iter().find(|o| o.id == d.id) {
+                if (old.battery, old.charging) == (d.battery, d.charging) {
+                    d.updated = old.updated;
+                }
+            }
+        }
+        self.power = fresh;
     }
 
     fn tick(&mut self) {
@@ -218,12 +242,15 @@ impl Daemon {
         self.rescan_power();
     }
 
-    /// Polled devices currently without a fresh reading.
+    /// Devices to retry soon: polled mice without a fresh reading (asleep), and Keychron
+    /// receivers whose setup has not completed.
     fn waiting(&self) -> impl Iterator<Item = usize> + '_ {
         self.hids
             .iter()
             .enumerate()
-            .filter(|(_, h)| h.found.rx.protocol == Protocol::Compx && !h.state.connected)
+            .filter(|(_, h)| {
+                (h.found.rx.protocol == Protocol::Compx && !h.state.connected) || h.needs_setup()
+            })
             .map(|(i, _)| i)
     }
 
@@ -231,7 +258,14 @@ impl Daemon {
         let idx: Vec<usize> = self.waiting().collect();
         for i in idx {
             let seq = self.next_seq();
-            self.hids[i].query_compx(seq);
+            self.hids[i].refresh(seq);
+        }
+    }
+
+    /// Completes Keychron setup after a hotplug event (interface 3 may arrive late).
+    fn retry_setup(&mut self) {
+        for h in self.hids.iter_mut().filter(|h| h.needs_setup()) {
+            h.refresh(0);
         }
     }
 
@@ -365,6 +399,7 @@ fn run(out: Output) -> io::Result<()> {
         }
         if rescan {
             d.rescan_hid();
+            d.retry_setup();
         }
         let now_i = Instant::now();
         if now_i >= next_tick {
