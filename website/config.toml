@@ -1,0 +1,11 @@
+# Zola site for https://zamiul-rashid.github.io/whiskerd/
+# Build: zola build (output in public/). Deployed by .github/workflows/pages.yml.
+base_url = "https://zamiul-rashid.github.io/whiskerd"
+title = "whiskerd"
+description = "Wireless mouse battery levels in your Linux top bar, read straight from the USB receiver."
+compile_sass = false
+build_search_index = false
+generate_feeds = false
+
+[extra]
+repo = "https://github.com/Zamiul-rashid/whiskerd"

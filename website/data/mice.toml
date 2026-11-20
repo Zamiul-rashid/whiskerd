@@ -1,0 +1,79 @@
+# Compatible mice shown on the website. Keep in sync with docs/compatible-mice.md.
+# evidence: "tested" (this project, real hardware), "elsewhere" (same protocol, read by another
+# project), "expected" (supported receiver, battery reading not yet confirmed).
+
+[[groups]]
+name = "Compx receivers"
+ids = ["248a:5b2f"]
+receiver = "SSCYPL Wireless-Receiver"
+how = "whiskerd asks the receiver for the status every 5 minutes. A sleeping mouse is not woken."
+cable = "The same mice by cable: 248a:5b2e, 331a:5024."
+
+[[groups.mice]]
+name = "Ajazz AJ179P"
+evidence = "tested"
+note = "Reports firmware tag M184."
+
+[[groups.mice]]
+name = "Delux M800 Pro"
+evidence = "elsewhere"
+note = "Read with the same bytes by Wireless-Device-Battery-Monitor."
+link = "https://github.com/krisgfx9/Wireless-Device-Battery-Monitor/pull/156"
+
+[[groups.mice]]
+name = "Genesis Zircon 500"
+evidence = "expected"
+note = "Same receiver. Firmware tag M137."
+
+[[groups.mice]]
+name = "Others with this dongle"
+evidence = "expected"
+note = "Shown as Mouse <tag>. The ID also appears with Maxxter and Langtu mice."
+
+[[groups]]
+name = "Keychron Link"
+ids = ["3434:d031", "3434:d030"]
+receiver = "Type-C and Type-A"
+how = "The receiver announces the battery when the mouse connects or wakes. After login, it appears the first time you use the mouse."
+cable = "Keychron's 4K and 8K receivers have other IDs and are not detected yet."
+
+[[groups.mice]]
+name = "Keychron M6"
+evidence = "tested"
+note = "Tested on the Type-C Link."
+
+[[groups.mice]]
+name = "Keychron M1"
+evidence = "expected"
+
+[[groups.mice]]
+name = "Keychron M2"
+evidence = "expected"
+
+[[groups.mice]]
+name = "Keychron M2 mini"
+evidence = "expected"
+
+[[groups.mice]]
+name = "Keychron M3"
+evidence = "expected"
+
+[[groups.mice]]
+name = "Keychron M3 mini"
+evidence = "expected"
+
+[[groups.mice]]
+name = "Keychron M7"
+evidence = "expected"
+
+[[groups]]
+name = "Read by the Linux kernel"
+ids = ["/sys/class/power_supply"]
+receiver = "any peripheral battery the kernel reports"
+how = "whiskerd shows these too, updated on kernel change events."
+cable = "Check with: ls /sys/class/power_supply"
+
+[[groups.mice]]
+name = "Logitech mice"
+evidence = "expected"
+note = "Unifying, Bolt or Lightspeed, via the kernel's hid-logitech-hidpp driver."

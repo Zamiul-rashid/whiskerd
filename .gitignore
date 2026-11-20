@@ -1,3 +1,10 @@
 target/
 *.pcap
 dist/
+
+# Zola build output
+website/public/
+# impeccable review screenshots
+.impeccable/review/
+.impeccable/hook.cache.json
+.impeccable/questions/
