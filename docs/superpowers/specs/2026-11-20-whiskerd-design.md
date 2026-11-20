@@ -138,3 +138,32 @@ mouse wakes after the daemon starts.
   visible.
 - Whether the Ajazz receiver answers while its mouse is asleep is unknown. If it doesn't, the last
   value is kept.
+
+## Addendum: what shipped in v0.1.0 (2026-11-20)
+
+These changes were agreed with the user while building and supersede the sections above where they
+differ.
+
+- **Daemon, not a timer.** Keychron receivers only push their battery when the mouse wakes, so
+  `whiskerd` runs as a long-lived systemd user service. It blocks in one `poll(2)` and its idle cost
+  is 0 % CPU and about 2 MB RSS.
+- **Protocol families plus a receiver table** (`src/devices.rs`). Each entry is marked *verified* or
+  *community-reported*. The udev rule is generated from the table with `whiskerd --udev-rules`.
+- **Kernel peripherals.** `/sys/class/power_supply` entries with scope `Device` are included (for
+  example Logitech through hid-logitech-hidpp). JSON entries gained a `kind` field.
+- **Sleeping Compx mice.** When the mouse sleeps, the receiver answers with zeros, so the daemon
+  retries every 30 s until it gets a reading, then every 300 s. Keychron receivers whose setup failed
+  (ACL not applied yet, interface 3 late) are retried on the same schedule and on every hidraw event.
+- **Hotplug** uses udev's netlink group (2), not the kernel group, so the `uaccess` ACL is already in
+  place when the daemon hears about a node.
+- **Extra CLI:**
+  - `--output -` prints JSON lines for other bars;
+  - `--probe` and `--list` are for diagnostics.
+- **Distribution:**
+  - static musl binaries for x86_64 and aarch64;
+  - nfpm-built `.deb`, `.rpm` and Arch packages;
+  - a signed apt repo and a signed dnf repo on GitHub Pages;
+  - a PKGBUILD for the AUR;
+  - `install.sh` for source installs.
+
+  Signing happens in a separate CI job that holds the key and runs no third-party actions.
