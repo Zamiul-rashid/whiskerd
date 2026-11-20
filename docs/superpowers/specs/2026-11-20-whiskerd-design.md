@@ -1,4 +1,4 @@
-# Mouse battery in the GNOME top bar: design
+# whiskerd: mouse battery in the GNOME top bar (design)
 
 Date: 2026-11-20 · Status: draft for review
 
@@ -55,17 +55,17 @@ Both protocols are read-only. Nothing is ever written to the mouse's settings.
 ## Architecture
 
 ```
-  receivers (hidraw)                 mouse-batteryd (Rust, systemd --user)
+  receivers (hidraw)                 whiskerd (Rust, systemd --user)
   ┌──────────────┐  poll every 5 min   ┌───────────────────────────────┐   atomic write
   │ Ajazz 5b2f   │◄────────────────────┤ drivers::ajazz                │
   └──────────────┘                     │ drivers::keychron             ├──► $XDG_RUNTIME_DIR/
-  ┌──────────────┐  pushed 0x54 e2     │ discovery (sysfs + netlink)   │    mouse-battery.json
+  ┌──────────────┐  pushed 0x54 e2     │ discovery (sysfs + netlink)   │    whiskerd.json
   │ Keychron d031├────────────────────►│ one poll(2) loop, no threads  │          │ inotify
   └──────────────┘                     └───────────────────────────────┘          ▼
                                                                GNOME Shell extension (panel items)
 ```
 
-### Daemon: `mouse-batteryd` (Rust)
+### Daemon: `whiskerd` (Rust)
 
 - Dependencies: `libc` only. No async runtime and no serde; the JSON is written by hand.
 - Event loop: a single `poll(2)` over
@@ -86,7 +86,7 @@ Both protocols are read-only. Nothing is ever written to the mouse's settings.
 
 ### Output file
 
-`$XDG_RUNTIME_DIR/mouse-battery.json` lives on tmpfs, so there are no disk writes:
+`$XDG_RUNTIME_DIR/whiskerd.json` lives on tmpfs, so there are no disk writes:
 
 ```json
 {"devices":[
@@ -98,7 +98,7 @@ Both protocols are read-only. Nothing is ever written to the mouse's settings.
 `battery` is `null` until the first reading arrives. For Keychron that happens the first time the
 mouse wakes after the daemon starts.
 
-### GNOME Shell extension: `mouse-battery@zamiul-rashid`
+### GNOME Shell extension: `whiskerd@zamiul-rashid`
 
 - A GNOME 45+ ESM extension for GNOME 50.
 - A single `PanelMenu.Button` shows one `input-mouse-symbolic` icon plus `NN%` for each device that
@@ -110,9 +110,9 @@ mouse wakes after the daemon starts.
 
 ### Permissions and install
 
-- `/etc/udev/rules.d/70-mouse-battery.rules`: `SUBSYSTEM=="hidraw"`, matching each dongle's
+- `/etc/udev/rules.d/70-whiskerd.rules`: `SUBSYSTEM=="hidraw"`, matching each dongle's
   VID:PID, `TAG+="uaccess"`. The logged-in user gets access and nothing runs as root.
-- `~/.config/systemd/user/mouse-batteryd.service`:
+- `~/.config/systemd/user/whiskerd.service`:
   - `Restart=on-failure`;
   - `MemoryMax=16M`, as a guard rail;
   - `NoNewPrivileges=yes`.
