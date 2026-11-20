@@ -102,7 +102,7 @@ mod tests {
 
     #[test]
     fn render_two_devices() {
-        let mut a = DeviceState::new("248a:5b2f@3-1".into(), "Ajazz M184".into(), "mouse");
+        let mut a = DeviceState::new("248a:5b2f@3-1".into(), "Ajazz AJ179P".into(), "mouse");
         a.apply(
             Reading {
                 battery: 77,
@@ -114,7 +114,7 @@ mod tests {
         assert_eq!(
             render_json(&[a, k]),
             "{\"devices\":[\
-             {\"id\":\"248a:5b2f@3-1\",\"name\":\"Ajazz M184\",\"kind\":\"mouse\",\"battery\":77,\"charging\":false,\"connected\":true,\"updated\":1795188749},\
+             {\"id\":\"248a:5b2f@3-1\",\"name\":\"Ajazz AJ179P\",\"kind\":\"mouse\",\"battery\":77,\"charging\":false,\"connected\":true,\"updated\":1795188749},\
              {\"id\":\"3434:d031@3-5.3\",\"name\":\"Keychron mouse\",\"kind\":\"mouse\",\"battery\":null,\"charging\":null,\"connected\":false,\"updated\":null}\
              ]}\n"
         );

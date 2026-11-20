@@ -41,7 +41,7 @@ pub fn parse(rx: &[u8]) -> Option<(Reading, String)> {
 /// Human name for a model tag. Unknown tags still get a usable name.
 pub fn model_name(tag: &str) -> String {
     match tag {
-        "M184" => "Ajazz M184".into(),
+        "M184" => "Ajazz AJ179P".into(), // the AJ179P reports firmware tag M184
         "M137" => "Genesis Zircon 500".into(),
         "" => "2.4 GHz mouse".into(),
         t => format!("Mouse {t}"),
@@ -53,7 +53,7 @@ mod tests {
     use super::*;
     use crate::drivers::hex;
 
-    // Live reply from an Ajazz M184 on 248a:5b2f, 2026-11-20.
+    // Live reply from an Ajazz AJ179P (firmware tag M184) on 248a:5b2f, 2026-11-20.
     const LIVE: &str = "0c 01 20 00 01 01 10 00 4d 31 38 34 33 01 00 95 11 ff 4d 00 \
                         ff 01 00 00 90 e5 31 38 ff c7 67 09 6d";
 
@@ -76,7 +76,7 @@ mod tests {
             }
         );
         assert_eq!(tag, "M184");
-        assert_eq!(model_name(&tag), "Ajazz M184");
+        assert_eq!(model_name(&tag), "Ajazz AJ179P");
     }
 
     #[test]
