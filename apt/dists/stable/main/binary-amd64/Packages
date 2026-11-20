@@ -17,3 +17,22 @@ Description: Wireless mouse battery levels in your status bar.
  Ajazz/Compx receivers and more) plus peripheral batteries the kernel already
  knows, and a GNOME Shell extension shows them in the top bar.
 
+Package: whiskerd
+Architecture: amd64
+Version: 0.2.0-1
+Priority: optional
+Section: utils
+Maintainer: Zamiul Rashid <Zamiul-rashid@users.noreply.github.com>
+Installed-Size: 454
+Filename: pool/main/w/whiskerd/whiskerd_0.2.0-1_amd64.deb
+Size: 244594
+MD5sum: 20201b5cf836184f5463054d5a1b8430
+SHA1: 48971793cc9212591225835302ff95952020df9d
+SHA256: ecc91a92ea529c2b0dae391c62b57cd082f4f01f8e248b8b35b58b3cdc4ce36b
+SHA512: c4b5f79c596f4358512e4951350852e0548926d084d191eb088d44650b0540973d64f82c5266a05c09ed5501256e14df7be09611191486ff4c90499056650160
+Homepage: https://github.com/Zamiul-rashid/whiskerd
+Description: Wireless mouse battery levels in your status bar.
+ A tiny daemon reads battery levels from 2.4 GHz mouse dongles (Keychron Link,
+ Ajazz/Compx receivers and more) plus peripheral batteries the kernel already
+ knows, and a GNOME Shell extension shows them in the top bar.
+
