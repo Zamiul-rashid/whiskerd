@@ -1,0 +1,71 @@
+name: pages
+# Builds the Zola website in website/ and publishes it to the root of the gh-pages branch. The
+# apt (/apt), dnf (/rpm) repositories and the key (/whiskerd.asc) on that branch are left alone;
+# release.yml owns those.
+on:
+  push:
+    branches: [main]
+    paths: ['website/**', '.github/workflows/pages.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# release.yml pushes to gh-pages too; never let the two race.
+concurrency:
+  group: gh-pages
+  cancel-in-progress: false
+
+env:
+  ZOLA_VERSION: 0.23.6
+  ZOLA_SHA256: 7d77a4220a4f699cba2fc0e0c7859f780e887e269159ad4fab90e11ea16c906f
+
+jobs:
+  build:
+    # No write access in this job: it runs a third-party binary.
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Zola (checksum-verified)
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/zola.tgz" \
+            "https://github.com/getzola/zola/releases/download/v${ZOLA_VERSION}/zola-v${ZOLA_VERSION}-x86_64-unknown-linux-musl.tar.gz"
+          echo "${ZOLA_SHA256}  $RUNNER_TEMP/zola.tgz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/zola.tgz" -C "$RUNNER_TEMP" zola
+      - name: Build
+        run: cd website && "$RUNNER_TEMP/zola" build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: website
+          path: website/public
+
+  publish:
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: website
+          path: public
+      - name: Check out gh-pages
+        run: |
+          if git fetch origin gh-pages:gh-pages 2>/dev/null; then
+            git worktree add site gh-pages
+          else
+            git worktree add --orphan -b gh-pages site
+          fi
+      - name: Copy the website over the branch root
+        run: |
+          cp -r public/. site/
+          touch site/.nojekyll
+      - name: Publish gh-pages
+        run: |
+          cd site
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "website: ${GITHUB_SHA::7}"
+          git push origin gh-pages

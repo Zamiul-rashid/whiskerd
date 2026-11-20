@@ -1,0 +1,356 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-20T17:39:40+00:00",
+  "title": "Design System: whiskerd",
+  "extensions": {
+    "colorMeta": {
+      "sheet": {
+        "role": "neutral",
+        "displayName": "Backing Sheet",
+        "canonical": "#b9c5d3",
+        "tonalRamp": [
+          "oklch(15% 0.024 252.2)",
+          "oklch(26% 0.024 252.2)",
+          "oklch(38% 0.024 252.2)",
+          "oklch(50% 0.024 252.2)",
+          "oklch(62% 0.024 252.2)",
+          "oklch(74% 0.024 252.2)",
+          "oklch(85% 0.024 252.2)",
+          "oklch(95% 0.024 252.2)"
+        ]
+      },
+      "sheet-deep": {
+        "role": "neutral",
+        "displayName": "Shaded Side",
+        "canonical": "#7b8da2",
+        "tonalRamp": [
+          "oklch(15% 0.038 252.4)",
+          "oklch(26% 0.038 252.4)",
+          "oklch(38% 0.038 252.4)",
+          "oklch(50% 0.038 252.4)",
+          "oklch(62% 0.038 252.4)",
+          "oklch(74% 0.038 252.4)",
+          "oklch(85% 0.038 252.4)",
+          "oklch(95% 0.038 252.4)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Sticker Stock",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0.000 89.9)",
+          "oklch(26% 0.000 89.9)",
+          "oklch(38% 0.000 89.9)",
+          "oklch(50% 0.000 89.9)",
+          "oklch(62% 0.000 89.9)",
+          "oklch(74% 0.000 89.9)",
+          "oklch(85% 0.000 89.9)",
+          "oklch(95% 0.000 89.9)"
+        ]
+      },
+      "ink": {
+        "role": "primary",
+        "displayName": "Mascot Nose Ink",
+        "canonical": "#1d2733",
+        "tonalRamp": [
+          "oklch(15% 0.027 253.3)",
+          "oklch(26% 0.027 253.3)",
+          "oklch(38% 0.027 253.3)",
+          "oklch(50% 0.027 253.3)",
+          "oklch(62% 0.027 253.3)",
+          "oklch(74% 0.027 253.3)",
+          "oklch(85% 0.027 253.3)",
+          "oklch(95% 0.027 253.3)"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Soft Ink",
+        "canonical": "#34414f",
+        "tonalRamp": [
+          "oklch(15% 0.030 250.5)",
+          "oklch(26% 0.030 250.5)",
+          "oklch(38% 0.030 250.5)",
+          "oklch(50% 0.030 250.5)",
+          "oklch(62% 0.030 250.5)",
+          "oklch(74% 0.030 250.5)",
+          "oklch(85% 0.030 250.5)",
+          "oklch(95% 0.030 250.5)"
+        ]
+      },
+      "tape": {
+        "role": "neutral",
+        "displayName": "Label Tape",
+        "canonical": "#2e3a48",
+        "tonalRamp": [
+          "oklch(15% 0.029 252.6)",
+          "oklch(26% 0.029 252.6)",
+          "oklch(38% 0.029 252.6)",
+          "oklch(50% 0.029 252.6)",
+          "oklch(62% 0.029 252.6)",
+          "oklch(74% 0.029 252.6)",
+          "oklch(85% 0.029 252.6)",
+          "oklch(95% 0.029 252.6)"
+        ]
+      },
+      "pink": {
+        "role": "secondary",
+        "displayName": "Ear Pink",
+        "canonical": "#ff9cb3",
+        "tonalRamp": [
+          "oklch(15% 0.121 5.1)",
+          "oklch(26% 0.121 5.1)",
+          "oklch(38% 0.121 5.1)",
+          "oklch(50% 0.121 5.1)",
+          "oklch(62% 0.121 5.1)",
+          "oklch(74% 0.121 5.1)",
+          "oklch(85% 0.121 5.1)",
+          "oklch(95% 0.121 5.1)"
+        ]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Top Bar",
+        "canonical": "#14181e",
+        "tonalRamp": [
+          "oklch(15% 0.013 258.4)",
+          "oklch(26% 0.013 258.4)",
+          "oklch(38% 0.013 258.4)",
+          "oklch(50% 0.013 258.4)",
+          "oklch(62% 0.013 258.4)",
+          "oklch(74% 0.013 258.4)",
+          "oklch(85% 0.013 258.4)",
+          "oklch(95% 0.013 258.4)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headline only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Receiver group and distro headings, Zen Maru Gothic 900."
+      },
+      "sticker-name": {
+        "displayName": "Sticker Name",
+        "purpose": "Mouse names on stickers (1rem on die lines); wordmark at 1.35rem."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "All prose; secondary text 0.9 to 0.97rem in ink-soft."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Evidence badges."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Commands, bytes, IDs, JSON."
+      }
+    },
+    "shadows": [
+      {
+        "name": "lift",
+        "value": "drop-shadow(0 1px 1px rgba(29,39,51,.22)) drop-shadow(0 8px 14px rgba(29,39,51,.16))",
+        "purpose": "Strips, fact stickers, mouse stickers at rest, JSON panel. Applied as filter."
+      },
+      {
+        "name": "lift-high",
+        "value": "drop-shadow(0 2px 2px rgba(29,39,51,.2)) drop-shadow(0 18px 24px rgba(29,39,51,.22))",
+        "purpose": "Mascot, top-bar sticker, a sticker being peeled. Applied as filter."
+      },
+      {
+        "name": "kiss-cut",
+        "value": "drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff) drop-shadow(2px 2px 0 #fff) drop-shadow(-2px -2px 0 #fff) drop-shadow(2px -2px 0 #fff) drop-shadow(-2px 2px 0 #fff)",
+        "purpose": "White border traced around a sticker's alpha, before the lift."
+      },
+      {
+        "name": "tape",
+        "value": "drop-shadow(0 3px 4px rgba(29,39,51,.25))",
+        "purpose": "Byte tapes."
+      },
+      {
+        "name": "topbar-ring",
+        "value": "box-shadow: 0 0 0 7px #ffffff",
+        "purpose": "Kiss-cut ring around the dark top-bar pill."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The only easing curve."
+      },
+      {
+        "name": "press",
+        "value": "0.2s",
+        "purpose": "Copy button colour and press."
+      },
+      {
+        "name": "peel",
+        "value": "0.35s",
+        "purpose": "Sticker straighten, lift and corner curl on hover/focus-within."
+      },
+      {
+        "name": "settle",
+        "value": "0.9s, 0.25s delay, once",
+        "purpose": "Top-bar sticker drops onto the sheet on load."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "none",
+        "purpose": "All animation and transition removed; page static."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "xs",
+        "value": "30rem"
+      },
+      {
+        "name": "md",
+        "value": "52rem"
+      },
+      {
+        "name": "lg",
+        "value": "64rem"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Copy Button",
+      "kind": "button",
+      "refersTo": "button-copy",
+      "description": "The only button: an ink pill at the end of a command strip.",
+      "html": "<button type=\"button\" class=\"ds-copy\">Copy</button>",
+      "css": ":host{--sheet:#b9c5d3;--sheet-deep:#7b8da2;--paper:#fff;--ink:#1d2733;--ink-soft:#34414f;--tape:#2e3a48;--pink:#ff9cb3;--panel:#14181e;--body:'Zen Maru Gothic',system-ui,sans-serif;--display:'Mochiy Pop One','Zen Maru Gothic',system-ui,sans-serif;--mono:ui-monospace,'JetBrains Mono','DejaVu Sans Mono',monospace;--ease:cubic-bezier(0.16,1,0.3,1)} .ds-copy{font:700 0.9rem/1 var(--body);color:var(--paper);background:var(--ink);border:0;border-radius:999px;padding:0.6rem 1.05rem;cursor:pointer;transition:background-color .2s var(--ease),transform .2s var(--ease)} .ds-copy:hover{background:var(--tape)} .ds-copy:active{transform:scale(.96)} .ds-copy:focus-visible{outline:3px solid var(--ink);outline-offset:3px}"
+    },
+    {
+      "name": "Command Strip",
+      "kind": "input",
+      "refersTo": "command-strip",
+      "description": "Label-maker strip holding one copyable command.",
+      "html": "<div class=\"ds-strip\"><code>sudo apt install whiskerd</code><button type=\"button\" class=\"ds-copy\">Copy</button></div>",
+      "css": ":host{--sheet:#b9c5d3;--sheet-deep:#7b8da2;--paper:#fff;--ink:#1d2733;--ink-soft:#34414f;--tape:#2e3a48;--pink:#ff9cb3;--panel:#14181e;--body:'Zen Maru Gothic',system-ui,sans-serif;--display:'Mochiy Pop One','Zen Maru Gothic',system-ui,sans-serif;--mono:ui-monospace,'JetBrains Mono','DejaVu Sans Mono',monospace;--ease:cubic-bezier(0.16,1,0.3,1)} .ds-strip{display:flex;align-items:center;gap:.75rem;max-width:34rem;padding:.6rem .6rem .6rem 1.1rem;background:var(--paper);border-radius:14px;filter:drop-shadow(0 1px 1px rgba(29,39,51,.22)) drop-shadow(0 8px 14px rgba(29,39,51,.16))} .ds-strip code{flex:1;font:600 1.05rem var(--mono);color:var(--ink);white-space:nowrap;overflow-x:auto} .ds-copy{font:700 .9rem/1 var(--body);color:var(--paper);background:var(--ink);border:0;border-radius:999px;padding:.6rem 1.05rem;cursor:pointer} .ds-copy:hover{background:var(--tape)} .ds-copy:focus-visible{outline:3px solid var(--ink);outline-offset:3px}"
+    },
+    {
+      "name": "Masthead Navigation",
+      "kind": "nav",
+      "refersTo": "",
+      "description": "Display-face wordmark left, bold text links right, underline on hover.",
+      "html": "<header class=\"ds-mast\"><a class=\"ds-word\" href=\"#\">whiskerd</a><nav class=\"ds-nav\"><a href=\"#\">Mice</a><a href=\"#\">How it works</a><a href=\"#\">Install</a><a href=\"#\">GitHub</a></nav></header>",
+      "css": ":host{--sheet:#b9c5d3;--sheet-deep:#7b8da2;--paper:#fff;--ink:#1d2733;--ink-soft:#34414f;--tape:#2e3a48;--pink:#ff9cb3;--panel:#14181e;--body:'Zen Maru Gothic',system-ui,sans-serif;--display:'Mochiy Pop One','Zen Maru Gothic',system-ui,sans-serif;--mono:ui-monospace,'JetBrains Mono','DejaVu Sans Mono',monospace;--ease:cubic-bezier(0.16,1,0.3,1)} .ds-mast{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.75rem 1.5rem;padding:1.25rem;background:var(--sheet);color:var(--ink)} .ds-word{font:400 1.35rem/1 var(--display);color:var(--ink);text-decoration:none} .ds-nav{display:flex;flex-wrap:wrap;gap:.25rem 1.25rem;font:700 1.0625rem var(--body)} .ds-nav a{color:var(--ink);text-decoration:none;padding-block:.25rem} .ds-nav a:hover{text-decoration:underline;text-decoration-color:rgba(29,39,51,.4);text-decoration-thickness:.16em;text-underline-offset:.2em} .ds-nav a:focus-visible{outline:3px solid var(--ink);outline-offset:3px;border-radius:6px}"
+    },
+    {
+      "name": "Evidence Badges",
+      "kind": "chip",
+      "refersTo": "badge-tested",
+      "description": "Tested (ink) and Tested elsewhere (sheet) pills on mouse stickers.",
+      "html": "<span class=\"ds-ev ds-ev-tested\">Tested</span> <span class=\"ds-ev ds-ev-elsewhere\">Tested elsewhere</span>",
+      "css": ":host{--sheet:#b9c5d3;--sheet-deep:#7b8da2;--paper:#fff;--ink:#1d2733;--ink-soft:#34414f;--tape:#2e3a48;--pink:#ff9cb3;--panel:#14181e;--body:'Zen Maru Gothic',system-ui,sans-serif;--display:'Mochiy Pop One','Zen Maru Gothic',system-ui,sans-serif;--mono:ui-monospace,'JetBrains Mono','DejaVu Sans Mono',monospace;--ease:cubic-bezier(0.16,1,0.3,1)} .ds-ev{display:inline-block;padding:.15rem .6rem;border-radius:999px;font:900 .8rem var(--body);letter-spacing:.02em} .ds-ev-tested{background:var(--ink);color:#fff} .ds-ev-elsewhere{background:var(--sheet);color:var(--ink)}"
+    },
+    {
+      "name": "Fact Sticker",
+      "kind": "chip",
+      "refersTo": "fact-sticker",
+      "description": "Small white pill label, tilted, lifted off the sheet.",
+      "html": "<ul class=\"ds-facts\"><li>No root at runtime</li><li>Read-only: never changes a setting</li></ul>",
+      "css": ":host{--sheet:#b9c5d3;--sheet-deep:#7b8da2;--paper:#fff;--ink:#1d2733;--ink-soft:#34414f;--tape:#2e3a48;--pink:#ff9cb3;--panel:#14181e;--body:'Zen Maru Gothic',system-ui,sans-serif;--display:'Mochiy Pop One','Zen Maru Gothic',system-ui,sans-serif;--mono:ui-monospace,'JetBrains Mono','DejaVu Sans Mono',monospace;--ease:cubic-bezier(0.16,1,0.3,1)} .ds-facts{list-style:none;margin:0;padding:1.5rem;display:flex;flex-wrap:wrap;gap:1rem 1.25rem;background:var(--sheet)} .ds-facts li{padding:.55rem 1.1rem;background:var(--paper);color:var(--ink);border-radius:999px;font:700 1.0625rem/1.65 var(--body);filter:drop-shadow(0 1px 1px rgba(29,39,51,.22)) drop-shadow(0 8px 14px rgba(29,39,51,.16))} .ds-facts li:nth-child(odd){transform:rotate(-1.5deg)} .ds-facts li:nth-child(even){transform:rotate(1.2deg)}"
+    },
+    {
+      "name": "Mouse Sticker",
+      "kind": "card",
+      "refersTo": "sticker-label",
+      "description": "Signature die-cut sticker; peels at the corner on hover or focus-within.",
+      "html": "<div class=\"ds-sheet\"><div class=\"ds-wrap\" tabindex=\"0\"><div class=\"ds-sticker\"><svg class=\"ds-mouse\" viewBox=\"0 0 72 72\" width=\"72\" height=\"72\" aria-hidden=\"true\"><ellipse cx=\"38\" cy=\"46\" rx=\"24\" ry=\"18\" fill=\"#b9c5d3\"/><circle cx=\"52\" cy=\"30\" r=\"9\" fill=\"#b9c5d3\"/><circle cx=\"52\" cy=\"30\" r=\"5\" fill=\"#ff9cb3\"/><circle cx=\"60\" cy=\"46\" r=\"2\" fill=\"#1d2733\"/></svg><div class=\"ds-label\"><h4>Ajazz AJ179P</h4><span class=\"ds-ev\">Tested</span><p>Reports firmware tag M184.</p></div></div></div></div>",
+      "css": ":host{--sheet:#b9c5d3;--sheet-deep:#7b8da2;--paper:#fff;--ink:#1d2733;--ink-soft:#34414f;--tape:#2e3a48;--pink:#ff9cb3;--panel:#14181e;--body:'Zen Maru Gothic',system-ui,sans-serif;--display:'Mochiy Pop One','Zen Maru Gothic',system-ui,sans-serif;--mono:ui-monospace,'JetBrains Mono','DejaVu Sans Mono',monospace;--ease:cubic-bezier(0.16,1,0.3,1)} .ds-sheet{padding:2rem;background:var(--sheet);max-width:20rem} .ds-wrap{position:relative;filter:drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff) drop-shadow(2px 2px 0 #fff) drop-shadow(-2px -2px 0 #fff) drop-shadow(2px -2px 0 #fff) drop-shadow(-2px 2px 0 #fff) drop-shadow(0 1px 1px rgba(29,39,51,.22)) drop-shadow(0 8px 14px rgba(29,39,51,.16));transform:rotate(-1.4deg);transition:filter .35s var(--ease),transform .35s var(--ease);outline:none} .ds-sticker{position:relative;padding-top:40px;clip-path:polygon(0 0,100% 0,100% 100%,100% 100%,0 100%);transition:clip-path .35s var(--ease)} .ds-mouse{position:absolute;top:0;left:.6rem} .ds-label{padding:2.6rem 1.2rem 1.15rem;background:var(--paper);border-radius:18px;color:var(--ink);font:500 1rem/1.5 var(--body)} .ds-label h4{margin:0;font:400 1.15rem/1.25 var(--display);letter-spacing:-.005em} .ds-ev{display:inline-block;margin-top:.5rem;padding:.15rem .6rem;border-radius:999px;font:900 .8rem var(--body);background:var(--ink);color:#fff} .ds-label p{margin:.55rem 0 0;font-size:.9rem;color:var(--ink-soft)} .ds-wrap::after{content:'';position:absolute;right:0;bottom:0;width:30px;height:30px;background:linear-gradient(135deg,#f7f9fb 0%,#e3e8ee 48%,#c7d0da 60%,#b2bcc8 100%);clip-path:polygon(0 0,100% 0,0 100%);border-radius:0 0 0 6px;transform:scale(0);transform-origin:100% 100%;transition:transform .35s var(--ease)} .ds-wrap:hover,.ds-wrap:focus-visible{transform:rotate(0) translateY(-3px);filter:drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff) drop-shadow(2px 2px 0 #fff) drop-shadow(-2px -2px 0 #fff) drop-shadow(2px -2px 0 #fff) drop-shadow(-2px 2px 0 #fff) drop-shadow(0 2px 2px rgba(29,39,51,.2)) drop-shadow(0 18px 24px rgba(29,39,51,.22))} .ds-wrap:hover .ds-sticker,.ds-wrap:focus-visible .ds-sticker{clip-path:polygon(0 0,100% 0,100% calc(100% - 30px),calc(100% - 30px) 100%,0 100%)} .ds-wrap:hover::after,.ds-wrap:focus-visible::after{transform:scale(1)}"
+    },
+    {
+      "name": "Expected Die Line",
+      "kind": "card",
+      "refersTo": "dieline",
+      "description": "Unprinted dashed outline for an expected mouse: no mascot, no lift.",
+      "html": "<div class=\"ds-sheet\"><div class=\"ds-die\"><h4>Genesis Zircon 500</h4><p>Same receiver. Firmware tag M137.</p></div></div>",
+      "css": ":host{--sheet:#b9c5d3;--sheet-deep:#7b8da2;--paper:#fff;--ink:#1d2733;--ink-soft:#34414f;--tape:#2e3a48;--pink:#ff9cb3;--panel:#14181e;--body:'Zen Maru Gothic',system-ui,sans-serif;--display:'Mochiy Pop One','Zen Maru Gothic',system-ui,sans-serif;--mono:ui-monospace,'JetBrains Mono','DejaVu Sans Mono',monospace;--ease:cubic-bezier(0.16,1,0.3,1)} .ds-sheet{padding:1.5rem;background:var(--sheet)} .ds-die{max-width:21rem;padding:.55rem 1rem .6rem;border:2px dashed rgba(29,39,51,.5);border-radius:14px;background:rgba(255,255,255,.18);color:var(--ink);font:500 1rem/1.5 var(--body)} .ds-die h4{margin:0;font:400 1rem/1.25 var(--display)} .ds-die p{margin:.2rem 0 0;font-size:.85rem;color:var(--ink-soft)}"
+    },
+    {
+      "name": "Byte Tape",
+      "kind": "custom",
+      "refersTo": "byte-tape",
+      "description": "Notched label tape of real protocol bytes; the battery byte in pink.",
+      "html": "<div class=\"ds-bytes\"><span>54</span><span>e2</span><span>01</span><span>01</span><span>00</span><span class=\"ds-hot\">4c</span><span>02</span><span>02</span></div>",
+      "css": ":host{--sheet:#b9c5d3;--sheet-deep:#7b8da2;--paper:#fff;--ink:#1d2733;--ink-soft:#34414f;--tape:#2e3a48;--pink:#ff9cb3;--panel:#14181e;--body:'Zen Maru Gothic',system-ui,sans-serif;--display:'Mochiy Pop One','Zen Maru Gothic',system-ui,sans-serif;--mono:ui-monospace,'JetBrains Mono','DejaVu Sans Mono',monospace;--ease:cubic-bezier(0.16,1,0.3,1)} .ds-bytes{display:inline-flex;flex-wrap:wrap;gap:.3rem .45rem;padding:.85rem 2rem;background:var(--tape);color:#e9edf2;font:600 1.1rem/1 var(--mono);clip-path:polygon(0 0,100% 0,calc(100% - 12px) 50%,100% 100%,0 100%,12px 50%);filter:drop-shadow(0 3px 4px rgba(29,39,51,.25))} .ds-bytes span{padding:.3rem .2rem;border-radius:5px} .ds-bytes .ds-hot{background:var(--pink);color:var(--ink);padding-inline:.45rem}"
+    },
+    {
+      "name": "Top-bar Sticker",
+      "kind": "custom",
+      "refersTo": "topbar-pill",
+      "description": "GNOME panel reproduced as a dark die-cut pill; settles onto the sheet once on load.",
+      "html": "<div class=\"ds-sheet\"><div class=\"ds-tb\"><svg viewBox=\"0 0 72 72\" width=\"22\" height=\"22\" aria-hidden=\"true\"><ellipse cx=\"38\" cy=\"46\" rx=\"24\" ry=\"18\" fill=\"#b9c5d3\"/><circle cx=\"52\" cy=\"30\" r=\"9\" fill=\"#b9c5d3\"/><circle cx=\"52\" cy=\"30\" r=\"5\" fill=\"#ff9cb3\"/><circle cx=\"60\" cy=\"46\" r=\"2\" fill=\"#1d2733\"/></svg><b>74%</b></div></div>",
+      "css": ":host{--sheet:#b9c5d3;--sheet-deep:#7b8da2;--paper:#fff;--ink:#1d2733;--ink-soft:#34414f;--tape:#2e3a48;--pink:#ff9cb3;--panel:#14181e;--body:'Zen Maru Gothic',system-ui,sans-serif;--display:'Mochiy Pop One','Zen Maru Gothic',system-ui,sans-serif;--mono:ui-monospace,'JetBrains Mono','DejaVu Sans Mono',monospace;--ease:cubic-bezier(0.16,1,0.3,1)} .ds-sheet{padding:2.5rem;background:var(--sheet)} .ds-tb{display:inline-flex;align-items:center;gap:.45rem;padding:.55rem 1.05rem .55rem .85rem;color:#eef1f5;font:700 .95rem/1 var(--body);background:var(--panel);border-radius:999px;box-shadow:0 0 0 7px var(--paper);filter:drop-shadow(0 2px 2px rgba(29,39,51,.2)) drop-shadow(0 18px 24px rgba(29,39,51,.22));transform:rotate(4deg);animation:ds-settle .9s var(--ease) .25s both} .ds-tb b{color:var(--pink);font-size:1.05rem;font-variant-numeric:tabular-nums} @keyframes ds-settle{from{transform:translate(10px,-26px) rotate(11deg) scale(1.08)}} @media (prefers-reduced-motion:reduce){.ds-tb{animation:none}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Sticker Sheet",
+    "overview": "The page is the backing sheet of a sticker sheet. Everything the visitor reads or takes away sits on something printed and cut: white kiss-cut stickers whose outlines follow the artwork, white label-maker strips holding commands, dark label tape carrying protocol bytes. The sheet itself is blue-grey, taken from the mascot's body, and below the hero it carries the release liner's faint printed lettering. Hairline crop marks register the corners of each printed area, and dashed perforations separate them.\n\nMaterial, not decoration, carries meaning. How much is known about a mouse is shown by how far its sticker got through the print run: printed in full colour, printed in greyscale, or only a dashed die line with nothing printed yet. Stickers sit a degree or two off square, lift slightly off the sheet, and peel at one corner when touched. The tone is friendly and toylike in its type and shapes, and plain and factual in its words.\n\nThe world was chosen against the dark terminal-hero developer-tool page with a three-card feature grid.",
+    "keyCharacteristics": [
+      "Blue-grey backing sheet, white sticker stock, near-black ink; pink only where the mascot or a battery number is.",
+      "Rounded Japanese pop display face over a rounded gothic body; a real monospace for bytes and commands.",
+      "Soft drop-shadow lift that follows the cut shape, never a box.",
+      "Small, alternating rotations; nothing perfectly square except the text.",
+      "Evidence encoded as print state: full colour, greyscale, unprinted die line."
+    ],
+    "rules": [
+      {
+        "name": "The Battery Pink Rule",
+        "body": "Pink marks a battery level or belongs to the mascot. It is never a button, link, border or heading colour. If a pink element is not a battery number, it is wrong.",
+        "section": "colors"
+      },
+      {
+        "name": "The Mascot Palette Rule",
+        "body": "New neutrals come from the mascot's body tones (sheet, sheet-deep) or ink alphas, not from a new hue.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Voices Rule",
+        "body": "The pop face names things (headings, mice, the wordmark) at weight 400 only; everything that explains is Zen Maru Gothic. Never set prose in Mochiy Pop One.",
+        "section": "typography"
+      },
+      {
+        "name": "The Unbroken Command Rule",
+        "body": "Inline code never wraps: it scrolls in place. Commands are copied, so they must stay intact.",
+        "section": "typography"
+      },
+      {
+        "name": "The Follow-The-Cut Rule",
+        "body": "Anything with a cut outline (mascot, kiss-cut sticker, tape, strip) lifts with `filter: drop-shadow`, so the shadow traces the cut shape. `box-shadow` is reserved for rings (the top-bar sticker's 7px white kiss-cut ring, the Copy failure ring) and the tiny rectangular legend chips.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do put content on a printed object (sticker, strip, tape, label) and leave the sheet itself for headings and prose.",
+      "Do encode evidence as print state: full colour for tested, greyscale for tested elsewhere, an unprinted dashed die line for expected.",
+      "Do lift with two-layer ink-tinted `drop-shadow` filters (the Lift and High lift values) so shadows follow the cut.",
+      "Do tilt stickers by one or two degrees and alternate the direction.",
+      "Do keep pink for battery numbers and the mascot's own colours.",
+      "Do register printed areas with hairline crop marks and separate them with a 2px dashed perforation.",
+      "Do honour reduced motion with a fully static page."
+    ],
+    "donts": [
+      "Don't build a dark terminal-hero developer-tool page with a three-card feature grid.",
+      "Don't use pink for buttons, links, borders or headings.",
+      "Don't set prose or labels in Mochiy Pop One, or use it at any weight but 400.",
+      "Don't lift a cut shape with `box-shadow`, and don't use a hard offset shadow of any kind.",
+      "Don't give an expected mouse a mascot, a lift or a fill; it has not been printed.",
+      "Don't let a command wrap; let it scroll inside its strip."
+    ]
+  }
+}

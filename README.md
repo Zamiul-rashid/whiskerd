@@ -16,7 +16,7 @@ Shell extension shows them in the top bar.
 
 | Receiver (USB ID) | Mice | Status |
 |---|---|---|
-| `248a:5b2f` "SSCYPL Wireless-Receiver" | Ajazz M184, plus other Compx-based mice (Delux, Genesis Zircon 500, Inphic, ...) | verified |
+| `248a:5b2f` "SSCYPL Wireless-Receiver" | Ajazz AJ179P, plus other Compx-based mice (Delux, Genesis Zircon 500, Inphic, ...) | verified |
 | `248a:5b2e`, `331a:5024` (wired) | the same family over USB cable | community-reported |
 | `3434:d031` Keychron Link (Type-C) | Keychron M6, M3, M1, M2, M7 ... | verified |
 | `3434:d030` Keychron Link (Type-A) | as above | community-reported |
@@ -73,7 +73,7 @@ git clone https://github.com/Zamiul-rashid/whiskerd && cd whiskerd
 The output file is `$XDG_RUNTIME_DIR/whiskerd.json` (in RAM):
 
 ```json
-{"devices":[{"id":"248a:5b2f@3-5.1","name":"Ajazz M184","kind":"mouse","battery":74,"charging":false,"connected":true,"updated":1795190426}]}
+{"devices":[{"id":"248a:5b2f@3-5.1","name":"Ajazz AJ179P","kind":"mouse","battery":74,"charging":false,"connected":true,"updated":1795190426}]}
 ```
 
 `connected: false` means the mouse is asleep or out of range; `battery` then holds the last known

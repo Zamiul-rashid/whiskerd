@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "website/templates/index.html"
+        ],
+        "createdAt": "2026-11-20T17:27:11.069Z",
+        "reason": "assistant decided: detector cannot resolve the Tera get_url stylesheet link and measures unstyled text; rendered page has h1 ~62px, h2 ~45px, body 17px (see .impeccable/review/desktop.png)"
+      }
+    ]
+  }
+}
