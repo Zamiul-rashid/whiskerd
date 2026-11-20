@@ -12,8 +12,8 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 const LOW = 20;
+// Theme icons by device kind. Mice use the bundled mouse.png instead (see _icon).
 const ICONS = {
-    mouse: 'input-mouse-symbolic',
     keyboard: 'input-keyboard-symbolic',
     device: 'battery-symbolic',
 };
@@ -36,6 +36,7 @@ export default class WhiskerdExtension extends Extension {
         this._button.add_child(this._box);
         Main.panel.addToStatusArea(this.uuid, this._button);
 
+        this._mouseIcon = Gio.FileIcon.new(this.dir.get_child('mouse.png'));
         this._devices = [];
         this._menuId = this._button.menu.connect('open-state-changed', (_m, open) => {
             if (open)
@@ -58,6 +59,7 @@ export default class WhiskerdExtension extends Extension {
         this._file = null;
         this._button = null;
         this._box = null;
+        this._mouseIcon = null;
         this._devices = null;
     }
 
@@ -78,10 +80,7 @@ export default class WhiskerdExtension extends Extension {
         this._box.destroy_all_children();
         const shown = this._devices.filter(d => d.battery !== null && d.battery !== undefined);
         for (const d of shown) {
-            this._box.add_child(new St.Icon({
-                icon_name: ICONS[d.kind] ?? ICONS.device,
-                style_class: 'system-status-icon',
-            }));
+            this._box.add_child(this._icon(d.kind));
             const label = new St.Label({
                 text: `${d.battery}%${d.charging ? ' ⚡' : ''}`,
                 y_align: Clutter.ActorAlign.CENTER,
@@ -96,6 +95,17 @@ export default class WhiskerdExtension extends Extension {
         this._button.visible = shown.length > 0;
         if (this._button.menu.isOpen)
             this._buildMenu();
+    }
+
+    _icon(kind) {
+        if (kind === 'mouse') {
+            // Full-colour artwork: not recoloured by the shell theme like symbolic icons.
+            return new St.Icon({gicon: this._mouseIcon, style_class: 'system-status-icon'});
+        }
+        return new St.Icon({
+            icon_name: ICONS[kind] ?? ICONS.device,
+            style_class: 'system-status-icon',
+        });
     }
 
     _buildMenu() {
