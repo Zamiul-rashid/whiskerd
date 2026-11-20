@@ -1,0 +1,11 @@
+.whiskerd-label {
+  padding: 0 6px 0 2px;
+}
+
+.whiskerd-low {
+  color: #f57900;
+}
+
+.whiskerd-stale {
+  opacity: 0.6;
+}

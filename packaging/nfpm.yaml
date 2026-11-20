@@ -1,0 +1,43 @@
+# Builds .deb, .rpm and Arch packages: see .github/workflows/release.yml.
+# Expects env: VERSION, ARCH (amd64|arm64), BIN (path to the static binary),
+# RPM_SIGNING_KEY_FILE (optional, armored private key), NFPM_PASSPHRASE.
+name: whiskerd
+arch: ${ARCH}
+platform: linux
+version: ${VERSION}
+release: 1
+section: utils
+priority: optional
+maintainer: Zamiul Rashid <Zamiul-rashid@users.noreply.github.com>
+vendor: whiskerd
+homepage: https://github.com/Zamiul-rashid/whiskerd
+license: MIT
+description: |
+  Wireless mouse battery levels in your status bar.
+  A tiny daemon reads battery levels from 2.4 GHz mouse dongles (Keychron Link,
+  Ajazz/Compx receivers and more) plus peripheral batteries the kernel already
+  knows, and a GNOME Shell extension shows them in the top bar.
+contents:
+  - src: ${BIN}
+    dst: /usr/bin/whiskerd
+    file_info:
+      mode: 0755
+  - src: packaging/whiskerd.service
+    dst: /usr/lib/systemd/user/whiskerd.service
+  - src: dist/70-whiskerd.rules
+    dst: /usr/lib/udev/rules.d/70-whiskerd.rules
+  - src: gnome-extension/
+    dst: /usr/share/gnome-shell/extensions/whiskerd@zamiul-rashid/
+    type: tree
+  - src: LICENSE
+    dst: /usr/share/doc/whiskerd/copyright
+  - src: README.md
+    dst: /usr/share/doc/whiskerd/README.md
+scripts:
+  postinstall: packaging/scripts/postinstall.sh
+  preremove: packaging/scripts/preremove.sh
+  postremove: packaging/scripts/postremove.sh
+rpm:
+  group: Applications/System
+  signature:
+    key_file: ${RPM_SIGNING_KEY_FILE}

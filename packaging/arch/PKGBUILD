@@ -1,0 +1,41 @@
+# Maintainer: Zamiul Rashid <Zamiul-rashid@users.noreply.github.com>
+pkgname=whiskerd
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Wireless mouse battery levels in your status bar (Keychron, Ajazz/Compx dongles)"
+arch=('x86_64' 'aarch64')
+url="https://github.com/Zamiul-rashid/whiskerd"
+license=('MIT')
+depends=('gcc-libs')
+makedepends=('cargo')
+optdepends=('gnome-shell: top-bar indicator')
+install=whiskerd.install
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('SKIP')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable CARGO_TARGET_DIR=target
+  cargo build --frozen --release
+}
+
+check() {
+  cd "$pkgname-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  cargo test --frozen
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  install -Dm755 target/release/whiskerd "$pkgdir/usr/bin/whiskerd"
+  install -Dm644 packaging/whiskerd.service "$pkgdir/usr/lib/systemd/user/whiskerd.service"
+  target/release/whiskerd --udev-rules | install -Dm644 /dev/stdin "$pkgdir/usr/lib/udev/rules.d/70-whiskerd.rules"
+  install -Dm644 -t "$pkgdir/usr/share/gnome-shell/extensions/whiskerd@zamiul-rashid" gnome-extension/*
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

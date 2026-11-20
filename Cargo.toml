@@ -1,0 +1,21 @@
+[package]
+name = "whiskerd"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.74"
+license = "MIT"
+description = "Tiny daemon that reads wireless mouse battery levels from 2.4 GHz dongles"
+repository = "https://github.com/Zamiul-rashid/whiskerd"
+readme = "README.md"
+keywords = ["mouse", "battery", "hidraw", "gnome", "linux"]
+categories = ["hardware-support", "command-line-utilities"]
+
+[dependencies]
+libc = "0.2"
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

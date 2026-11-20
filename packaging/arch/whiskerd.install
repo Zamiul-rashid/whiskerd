@@ -1,0 +1,14 @@
+post_install() {
+  udevadm control --reload-rules >/dev/null 2>&1 || true
+  udevadm trigger --subsystem-match=hidraw --action=change >/dev/null 2>&1 || true
+  systemctl --global enable whiskerd.service >/dev/null 2>&1 || true
+  echo "whiskerd: start now with 'systemctl --user restart whiskerd';"
+  echo "          GNOME: re-login, then 'gnome-extensions enable whiskerd@zamiul-rashid'"
+}
+post_upgrade() {
+  udevadm control --reload-rules >/dev/null 2>&1 || true
+  echo "whiskerd: restart with 'systemctl --user restart whiskerd'"
+}
+pre_remove() {
+  systemctl --global disable whiskerd.service >/dev/null 2>&1 || true
+}

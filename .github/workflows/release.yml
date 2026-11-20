@@ -1,0 +1,150 @@
+name: release
+# Push a tag like v0.1.0 to build static binaries, .deb/.rpm/Arch packages, a GitHub release,
+# and the signed apt + dnf repositories on GitHub Pages (gh-pages branch).
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+env:
+  NFPM_VERSION: 2.48.0
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-musl
+            arch: amd64
+          - target: aarch64-unknown-linux-musl
+            arch: arm64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cross
+      - name: Build static binary
+        run: cross build --release --locked --target ${{ matrix.target }}
+      - name: Generate udev rule
+        run: |
+          mkdir -p dist
+          cargo run --release --locked --quiet -- --udev-rules > dist/70-whiskerd.rules
+      - name: Install nfpm
+        run: |
+          curl -fsSL "https://github.com/goreleaser/nfpm/releases/download/v${NFPM_VERSION}/nfpm_${NFPM_VERSION}_Linux_x86_64.tar.gz" \
+            | sudo tar -xz -C /usr/local/bin nfpm
+      - name: Build packages
+        env:
+          SIGNING_KEY: ${{ secrets.PKG_GPG_PRIVATE_KEY }}
+        run: |
+          export VERSION="${GITHUB_REF_NAME#v}" ARCH="${{ matrix.arch }}"
+          export BIN="target/${{ matrix.target }}/release/whiskerd"
+          export NFPM_PASSPHRASE=""
+          if [ -n "$SIGNING_KEY" ]; then
+            printf '%s\n' "$SIGNING_KEY" > "$RUNNER_TEMP/key.asc"
+            export RPM_SIGNING_KEY_FILE="$RUNNER_TEMP/key.asc"
+          else
+            export RPM_SIGNING_KEY_FILE=""
+          fi
+          for p in deb rpm archlinux; do
+            nfpm package --config packaging/nfpm.yaml --packager "$p" --target dist/
+          done
+          cp "$BIN" "dist/whiskerd-${VERSION}-${{ matrix.target }}"
+          rm -f "$RUNNER_TEMP/key.asc"
+          ls -l dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pkg-${{ matrix.arch }}
+          path: |
+            dist/*.deb
+            dist/*.rpm
+            dist/*.pkg.tar.zst
+            dist/whiskerd-*
+
+  release:
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd dist && sha256sum * > SHA256SUMS
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --generate-notes ./*
+
+  repo:
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Install repo tools
+        run: sudo apt-get update && sudo apt-get install -y apt-utils createrepo-c
+      - name: Import signing key
+        env:
+          SIGNING_KEY: ${{ secrets.PKG_GPG_PRIVATE_KEY }}
+        run: printf '%s\n' "$SIGNING_KEY" | gpg --batch --import
+      - name: Check out gh-pages
+        run: |
+          git fetch origin gh-pages:gh-pages 2>/dev/null || true
+          if git show-ref --quiet refs/heads/gh-pages; then
+            git worktree add site gh-pages
+          else
+            git worktree add --orphan -b gh-pages site
+          fi
+      - name: Build apt + dnf repositories
+        run: |
+          set -euo pipefail
+          cp packaging/repo/index.html site/index.html
+          gpg --armor --export > site/whiskerd.asc
+
+          # apt
+          mkdir -p site/apt/pool/main/w/whiskerd
+          cp dist/*.deb site/apt/pool/main/w/whiskerd/
+          cd site/apt
+          for arch in amd64 arm64; do
+            mkdir -p "dists/stable/main/binary-$arch"
+            apt-ftparchive --arch "$arch" packages pool > "dists/stable/main/binary-$arch/Packages"
+            gzip -kf9 "dists/stable/main/binary-$arch/Packages"
+          done
+          apt-ftparchive \
+            -o APT::FTPArchive::Release::Origin=whiskerd \
+            -o APT::FTPArchive::Release::Label=whiskerd \
+            -o APT::FTPArchive::Release::Suite=stable \
+            -o APT::FTPArchive::Release::Codename=stable \
+            -o "APT::FTPArchive::Release::Architectures=amd64 arm64" \
+            -o APT::FTPArchive::Release::Components=main \
+            release dists/stable > dists/stable/Release.new
+          mv dists/stable/Release.new dists/stable/Release
+          gpg --batch --yes --clearsign -o dists/stable/InRelease dists/stable/Release
+          gpg --batch --yes -abs -o dists/stable/Release.gpg dists/stable/Release
+          cd ../..
+
+          # dnf
+          for arch in x86_64 aarch64; do
+            mkdir -p "site/rpm/$arch"
+            cp dist/*."$arch".rpm "site/rpm/$arch/"
+            createrepo_c --update "site/rpm/$arch"
+            gpg --batch --yes --armor --detach-sign "site/rpm/$arch/repodata/repomd.xml"
+          done
+          cp packaging/repo/whiskerd.repo site/rpm/whiskerd.repo
+          touch site/.nojekyll
+      - name: Publish
+        run: |
+          cd site
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "repo: ${GITHUB_REF_NAME}"
+          git push origin gh-pages

@@ -1,0 +1,13 @@
+[Unit]
+Description=whiskerd - wireless mouse battery monitor
+Documentation=https://github.com/Zamiul-rashid/whiskerd
+
+[Service]
+ExecStart=/usr/bin/whiskerd
+Restart=on-failure
+RestartSec=5
+MemoryMax=16M
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=default.target
