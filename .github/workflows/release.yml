@@ -1,7 +1,7 @@
 name: release
 # Push a tag like v0.1.0 to build static binaries and .deb/.rpm/Arch packages, then (in a separate
 # job that alone holds the signing key) sign them, publish the GitHub release, and update the signed
-# apt + dnf repositories on GitHub Pages (gh-pages branch).
+# apt + dnf repositories on GitHub Pages (gh-pages branch). The website there comes from pages.yml.
 on:
   push:
     tags: ['v*']
@@ -66,6 +66,10 @@ jobs:
     # The only job with the signing key. Uses GitHub's own actions and distro tools only.
     needs: build
     runs-on: ubuntu-24.04
+    # pages.yml pushes the website to gh-pages too; never let the two race.
+    concurrency:
+      group: gh-pages
+      cancel-in-progress: false
     permissions:
       contents: write
     steps:
@@ -112,7 +116,7 @@ jobs:
       - name: Build apt + dnf repositories
         run: |
           set -euo pipefail
-          cp packaging/repo/index.html site/index.html
+          # The front page is the website (website/, published by pages.yml).
           gpg --armor --export "$FPR" > site/whiskerd.asc
 
           # apt: one "stable" suite, component "main"
