@@ -4,7 +4,7 @@
 //! Vendor interface 1, feature report `0x0C` (33 bytes with the report id). Command `0x20` asks
 //! for the device status; it is read-only. Reply layout:
 //! `rx[2]` = 0x20, `rx[6]` = payload length (0 = not ready), `rx[8..12]` = ASCII model tag,
-//! `rx[0x12]` = battery %, `rx[0x13]` = 1 charging / 2 full / else discharging.
+//! `rx[0x12]` = battery % (0 = no reading yet), `rx[0x13]` = 1 charging / 2 full / else discharging.
 
 use super::Reading;
 
@@ -25,7 +25,9 @@ pub fn parse(rx: &[u8]) -> Option<(Reading, String)> {
         return None;
     }
     let battery = rx[0x12];
-    if battery > 100 {
+    // 0 is what a freshly plugged receiver answers before the mouse has reported; a mouse that
+    // can still answer is never really at 0%. Treat it as "no reading yet" so it is retried.
+    if battery == 0 || battery > 100 {
         return None;
     }
     let tag = rx[8..12]
@@ -101,6 +103,17 @@ mod tests {
         rx[0x12] = 101;
         assert_eq!(parse(&rx), None);
         assert_eq!(parse(&good[..0x13]), None);
+    }
+
+    #[test]
+    fn zero_battery_is_no_reading() {
+        // Seen live: right after the receiver is plugged in it answers with battery 0 before the
+        // mouse has reported. A mouse that can answer is never really at 0%.
+        let mut rx = hex(LIVE);
+        rx[0x12] = 0;
+        assert_eq!(parse(&rx), None);
+        rx[0x13] = 1; // charging from empty would report a level above 0 too
+        assert_eq!(parse(&rx), None);
     }
 
     #[test]
