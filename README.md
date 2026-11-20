@@ -2,6 +2,8 @@
 
 Wireless mouse battery levels in your Linux status bar, without vendor software.
 
+**Website:** https://zamiul-rashid.github.io/whiskerd/ · **Does my mouse work?** [Compatible mice](docs/compatible-mice.md)
+
 Many 2.4 GHz mice never report their battery to Linux. whiskerd is a tiny daemon that talks to
 their USB dongles directly, read-only. It publishes the levels as a small JSON file, and a GNOME
 Shell extension shows them in the top bar.
@@ -16,7 +18,7 @@ Shell extension shows them in the top bar.
 
 | Receiver (USB ID) | Mice | Status |
 |---|---|---|
-| `248a:5b2f` "SSCYPL Wireless-Receiver" | Ajazz AJ179P, plus other Compx-based mice (Delux, Genesis Zircon 500, Inphic, ...) | verified |
+| `248a:5b2f` "SSCYPL Wireless-Receiver" | Ajazz AJ179P, plus other Compx-based mice (Delux M800 Pro, Genesis Zircon 500, Inphic, ...) | verified |
 | `248a:5b2e`, `331a:5024` (wired) | the same family over USB cable | community-reported |
 | `3434:d031` Keychron Link (Type-C) | Keychron M6, M3, M1, M2, M7 ... | verified |
 | `3434:d030` Keychron Link (Type-A) | as above | community-reported |
@@ -25,6 +27,11 @@ Shell extension shows them in the top bar.
 **verified** means it has been tested on real hardware by this project. **community-reported** means
 the protocol is documented by other projects for that ID. Run `whiskerd --list` for the current table
 and `whiskerd --probe` to see what whiskerd finds on your machine.
+
+The per-mouse list, with how sure we are about each one, is in
+[docs/compatible-mice.md](docs/compatible-mice.md) and on the [website](https://zamiul-rashid.github.io/whiskerd/#mice).
+
+whiskerd runs on Linux only for now.
 
 ## Install
 
@@ -84,6 +91,8 @@ on stdout for every change (Waybar `custom` modules, polybar, eww ...).
 
 - **The receiver speaks a protocol whiskerd already knows:** add one line to `RECEIVERS` in
   [`src/devices.rs`](src/devices.rs). The udev rule is generated from that table.
+- **Either way:** add the mouse to [`docs/compatible-mice.md`](docs/compatible-mice.md) and
+  [`website/data/mice.toml`](website/data/mice.toml) with its evidence level.
 - **A new protocol:** add a parser in `src/drivers/` with tests built from real captured bytes, then
   wire it up in `src/main.rs`.
 
@@ -91,6 +100,21 @@ Please open an issue with the output of `lsusb` and `whiskerd --probe` either wa
 including how these protocols were reverse-engineered, are in
 [`docs/superpowers/specs/`](docs/superpowers/specs/).
 
+## Website
+
+The site lives in [`website/`](website/) (a [Zola](https://www.getzola.org/) project). Preview it
+with `cd website && zola serve`. Every push to `main` that changes `website/` publishes it to GitHub
+Pages ([`.github/workflows/pages.yml`](.github/workflows/pages.yml)), next to the apt and dnf
+repositories.
+
 ## License
 
-MIT
+MIT, except the files credited below.
+
+## Credits
+
+- Mouse icon (`gnome-extension/mouse.png`, `website/static/img/mouse-*.png`, `website/static/favicon.png`):
+  [Flaticon icon 1682033](https://www.flaticon.com/free-icon/mouse_1682033), used under the
+  Flaticon free license with attribution.
+- Fonts on the website: [Mochiy Pop One](https://fonts.google.com/specimen/Mochiy+Pop+One) and
+  [Zen Maru Gothic](https://fonts.google.com/specimen/Zen+Maru+Gothic), SIL Open Font License 1.1.
