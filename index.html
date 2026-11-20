@@ -1,18 +1,253 @@
 <!doctype html>
+<html lang="en">
+<head>
 <meta charset="utf-8">
-<title>whiskerd packages</title>
-<style>body{font:16px/1.5 system-ui,sans-serif;max-width:46rem;margin:2rem auto;padding:0 1rem}pre{background:#f4f4f4;padding:.75rem;overflow-x:auto}</style>
-<h1>whiskerd package repositories</h1>
-<p>Wireless mouse battery levels in your status bar. Source and docs:
-<a href="https://github.com/Zamiul-rashid/whiskerd">github.com/Zamiul-rashid/whiskerd</a>.</p>
-<h2>Ubuntu / Debian</h2>
-<pre>curl -fsSL https://zamiul-rashid.github.io/whiskerd/whiskerd.asc | sudo gpg --dearmor -o /usr/share/keyrings/whiskerd.gpg
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>whiskerd: your wireless mouse's battery in the Linux top bar</title>
+<meta name="description" content="Wireless mouse battery levels in your Linux top bar, read straight from the USB receiver.">
+<meta name="theme-color" content="#b9c5d3">
+<link rel="icon" type="image/png" href="https://zamiul-rashid.github.io/whiskerd/favicon.png">
+<link rel="preload" href="https://zamiul-rashid.github.io/whiskerd/fonts/mochiy-pop-one-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://zamiul-rashid.github.io/whiskerd/style.css?h=15bb3c3ffa8b542f92e1">
+<meta property="og:title" content="whiskerd">
+<meta property="og:description" content="Wireless mouse battery levels in your Linux top bar, read straight from the USB receiver.">
+<meta property="og:image" content="https://zamiul-rashid.github.io/whiskerd/img/mouse-sticker.png">
+</head>
+<body>
+<a class="skip" href="#mice">Skip to compatible mice</a>
+
+<header class="masthead">
+  <a class="wordmark" href="https://zamiul-rashid.github.io/whiskerd"><img src="https://zamiul-rashid.github.io/whiskerd/img/mouse-128.png" alt="" width="28" height="28">whiskerd</a>
+  <nav aria-label="Sections">
+    <a href="#mice">Mice</a>
+    <a href="#how">How it works</a>
+    <a href="#install">Install</a>
+    <a href="https://github.com/Zamiul-rashid/whiskerd">GitHub</a>
+  </nav>
+</header>
+
+<main>
+<section class="hero sheet" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    <h1 id="hero-title">Your mouse’s battery, right in the top bar.</h1>
+    <p class="lede">Many 2.4&nbsp;GHz mice never tell Linux how full their battery is. whiskerd asks
+      the USB receiver directly, read-only, and a GNOME extension shows the level in the top bar.</p>
+    <div class="strip" data-copy>
+      <code>sudo apt install whiskerd</code>
+      <button type="button" class="copy">Copy</button>
+    </div>
+    <p class="strip-note">After <a href="#apt">adding the repository</a>. Also for
+      <a href="#fedora">Fedora</a>, <a href="#arch">Arch</a> and <a href="#source">any distro from source</a>.</p>
+  </div>
+
+  <div class="hero-art" aria-hidden="true">
+    <img class="mascot" src="https://zamiul-rashid.github.io/whiskerd/img/mouse-sticker.png" alt="" width="564" height="492">
+    <div class="topbar-sticker">
+      <img src="https://zamiul-rashid.github.io/whiskerd/img/mouse-128.png" alt="" width="22" height="22"><b>74%</b>
+    </div>
+    <p class="tb-caption">Ajazz AJ179P · 74% · updated just now</p>
+  </div>
+  <p class="sr-only">Illustration: whiskerd in the GNOME top bar, a small mouse icon and 74%.</p>
+</section>
+
+<ul class="facts" aria-label="At a glance">
+  <li>About 2&nbsp;MB of RAM, no CPU while idle</li>
+  <li>No root at runtime</li>
+  <li>Plug in a dongle, the mouse appears</li>
+  <li>Read-only: never changes a setting</li>
+</ul>
+
+<section id="mice" class="mice sheet" aria-labelledby="mice-title">
+  <div class="section-head">
+    <h2 id="mice-title">Does my mouse work?</h2>
+    <p>whiskerd talks to the receiver, so what counts is the dongle your mouse came with. Run
+      <code>lsusb</code> to see its ID. Every mouse below says how sure we are.</p>
+    <ul class="legend">
+      <li><span class="chip chip-tested"></span><span><b>Tested</b>: read on real hardware by this project</span></li>
+      <li><span class="chip chip-elsewhere"></span><span><b>Tested elsewhere</b>: another project reads it with the same bytes</span></li>
+      <li><span class="chip chip-expected"></span><span><b>Expected</b>: supported receiver, not yet confirmed</span></li>
+    </ul>
+  </div>
+  <div class="group">
+    <div class="group-aside">
+    <div class="group-head">
+      <h3>Compx receivers</h3>
+      <p class="ids"><code>248a:5b2f</code><span>SSCYPL Wireless-Receiver</span></p>
+      <p class="group-how">whiskerd asks the receiver for the status every 5 minutes. A sleeping mouse is not woken.</p>
+    </div>
+    <p class="group-foot">The same mice by cable: 248a:5b2e, 331a:5024.</p>
+    </div>
+    <div class="group-body">
+    <ul class="stickers">
+      <li class="sticker-wrap ev-tested">
+        <div class="sticker">
+          <img src="https://zamiul-rashid.github.io/whiskerd/img/mouse-128.png" alt="" width="72" height="72">
+          <div class="label">
+            <h4>Ajazz AJ179P</h4>
+            <p class="ev">Tested</p><p class="note">Reports firmware tag M184.</p>
+          </div>
+        </div>
+      </li>
+      <li class="sticker-wrap ev-elsewhere">
+        <div class="sticker">
+          <img src="https://zamiul-rashid.github.io/whiskerd/img/mouse-128.png" alt="" width="72" height="72">
+          <div class="label">
+            <h4>Delux M800 Pro</h4>
+            <p class="ev">Tested elsewhere</p><p class="note">Read with the same bytes by Wireless-Device-Battery-Monitor. <a href="https://github.com/krisgfx9/Wireless-Device-Battery-Monitor/pull/156">Source</a></p>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <ul class="dielines" aria-label="Expected to work">
+      <li><h4>Genesis Zircon 500</h4><p class="note">Same receiver. Firmware tag M137.</p></li>
+      <li><h4>Others with this dongle</h4><p class="note">Shown as Mouse &lt;tag&gt;. The ID also appears with Maxxter and Langtu mice.</p></li>
+    </ul>
+    </div>
+  </div>
+  <div class="group">
+    <div class="group-aside">
+    <div class="group-head">
+      <h3>Keychron Link</h3>
+      <p class="ids"><code>3434:d031</code><code>3434:d030</code><span>Type-C and Type-A</span></p>
+      <p class="group-how">The receiver announces the battery when the mouse connects or wakes. After login, it appears the first time you use the mouse.</p>
+    </div>
+    <p class="group-foot">Keychron&#39;s 4K and 8K receivers have other IDs and are not detected yet.</p>
+    </div>
+    <div class="group-body">
+    <ul class="stickers">
+      <li class="sticker-wrap ev-tested">
+        <div class="sticker">
+          <img src="https://zamiul-rashid.github.io/whiskerd/img/mouse-128.png" alt="" width="72" height="72">
+          <div class="label">
+            <h4>Keychron M6</h4>
+            <p class="ev">Tested</p><p class="note">Tested on the Type-C Link.</p>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <ul class="dielines" aria-label="Expected to work">
+      <li><h4>Keychron M1</h4></li>
+      <li><h4>Keychron M2</h4></li>
+      <li><h4>Keychron M2 mini</h4></li>
+      <li><h4>Keychron M3</h4></li>
+      <li><h4>Keychron M3 mini</h4></li>
+      <li><h4>Keychron M7</h4></li>
+    </ul>
+    </div>
+  </div>
+  <div class="group">
+    <div class="group-aside">
+    <div class="group-head">
+      <h3>Read by the Linux kernel</h3>
+      <p class="ids"><code>/sys/class/power_supply</code><span>any peripheral battery the kernel reports</span></p>
+      <p class="group-how">whiskerd shows these too, updated on kernel change events.</p>
+    </div>
+    <p class="group-foot">Check with: ls /sys/class/power_supply</p>
+    </div>
+    <div class="group-body">
+    <ul class="stickers">
+    </ul>
+    <ul class="dielines" aria-label="Expected to work">
+      <li><h4>Logitech mice</h4><p class="note">Unifying, Bolt or Lightspeed, via the kernel&#39;s hid-logitech-hidpp driver.</p></li>
+    </ul>
+    </div>
+  </div>
+
+  <p class="missing">Not on the sheet? Open an <a href="https://github.com/Zamiul-rashid/whiskerd/issues/new">issue</a> with the output of
+    <code>lsusb</code> and <code>whiskerd --probe</code>. If the receiver speaks a protocol whiskerd knows,
+    adding it is one line.</p>
+</section>
+
+<section id="how" class="how" aria-labelledby="how-title">
+  <h2 id="how-title">It reads the receiver, byte by byte</h2>
+  <p class="how-intro">No vendor app, no guessing. These are real replies captured from the two tested mice,
+    with the battery byte in pink.</p>
+
+  <figure class="tape">
+    <figcaption><b>Keychron M6</b> · the Link receiver announces it when the mouse wakes</figcaption>
+    <div class="bytes" role="img" aria-label="Bytes 54 e2 01 01 00 4c 02 02. Byte 4c is the battery: 76 percent.">
+      <span>54</span><span>e2</span><span>01</span><span>01</span><span>00</span><span class="hot">4c</span><span>02</span><span>02</span>
+    </div>
+    <p class="decode"><span class="hot-text">0x4c = 76%</span> status event, connected, battery, valid</p>
+  </figure>
+
+  <figure class="tape">
+    <figcaption><b>Ajazz AJ179P</b> · whiskerd asks, the receiver answers</figcaption>
+    <div class="bytes" role="img" aria-label="Reply bytes with firmware tag M184, battery byte 4d which is 77 percent, and charge state 00 meaning not charging.">
+      <span>0c</span><span>01</span><span>20</span><span>00</span><span>01</span><span>01</span><span>10</span><span>00</span><span class="tag">4d</span><span class="tag">31</span><span class="tag">38</span><span class="tag">34</span><span>33</span><span>01</span><span>00</span><span>95</span><span>11</span><span>ff</span><span class="hot">4d</span><span>00</span>
+    </div>
+    <p class="decode"><span class="tag-text">“M184”</span> firmware tag · <span class="hot-text">0x4d = 77%</span> · <code>00</code> not charging</p>
+  </figure>
+
+  <div class="json">
+    <p>The result is one small JSON file in RAM, <code>$XDG_RUNTIME_DIR/whiskerd.json</code>:</p>
+    <pre><code>{"devices":[{"id":"248a:5b2f@3-5.1","name":"Ajazz AJ179P","kind":"mouse",
+  "battery":<span class="hot-text">74</span>,"charging":false,"connected":true,"updated":1795190426}]}</code></pre>
+    <p>The GNOME extension watches it. Other bars can read it too, or run <code>whiskerd --output -</code>
+      for one JSON line per change (Waybar, polybar, eww).</p>
+  </div>
+</section>
+
+<section id="install" class="install sheet" aria-labelledby="install-title">
+  <h2 id="install-title">Install</h2>
+
+  <div class="distro" id="apt">
+    <h3>Ubuntu / Debian</h3>
+    <div class="strip strip-block" data-copy>
+      <pre><code>curl -fsSL https://zamiul-rashid.github.io/whiskerd/whiskerd.asc | sudo gpg --dearmor -o /usr/share/keyrings/whiskerd.gpg
 echo "deb [signed-by=/usr/share/keyrings/whiskerd.gpg] https://zamiul-rashid.github.io/whiskerd/apt stable main" | sudo tee /etc/apt/sources.list.d/whiskerd.list
-sudo apt update && sudo apt install whiskerd</pre>
-<h2>Fedora</h2>
-<pre>sudo curl -fsSL -o /etc/yum.repos.d/whiskerd.repo https://zamiul-rashid.github.io/whiskerd/rpm/whiskerd.repo
-sudo dnf install whiskerd</pre>
-<h2>Arch Linux</h2>
-<p>Download <code>whiskerd-*.pkg.tar.zst</code> from the
-<a href="https://github.com/Zamiul-rashid/whiskerd/releases">releases</a> and run
-<code>sudo pacman -U whiskerd-*.pkg.tar.zst</code>, or build from <code>packaging/arch/PKGBUILD</code>.</p>
+sudo apt update &amp;&amp; sudo apt install whiskerd</code></pre>
+      <button type="button" class="copy">Copy</button>
+    </div>
+  </div>
+
+  <div class="distro" id="fedora">
+    <h3>Fedora</h3>
+    <div class="strip strip-block" data-copy>
+      <pre><code>sudo curl -fsSL -o /etc/yum.repos.d/whiskerd.repo https://zamiul-rashid.github.io/whiskerd/rpm/whiskerd.repo
+sudo dnf install whiskerd</code></pre>
+      <button type="button" class="copy">Copy</button>
+    </div>
+  </div>
+
+  <div class="distro" id="arch">
+    <h3>Arch Linux</h3>
+    <p>Download <code>whiskerd-*.pkg.tar.zst</code> from the <a href="https://github.com/Zamiul-rashid/whiskerd/releases">releases</a>, then:</p>
+    <div class="strip" data-copy>
+      <code>sudo pacman -U whiskerd-*.pkg.tar.zst</code>
+      <button type="button" class="copy">Copy</button>
+    </div>
+    <p>Or build it from <a href="https://github.com/Zamiul-rashid/whiskerd/blob/main/packaging/arch/PKGBUILD"><code>packaging/arch/PKGBUILD</code></a> with <code>makepkg -si</code>.</p>
+  </div>
+
+  <div class="distro" id="source">
+    <h3>From source, any distro</h3>
+    <p>Needs <a href="https://rustup.rs">Rust</a>. Asks for sudo once, for the udev rule.</p>
+    <div class="strip strip-block" data-copy>
+      <pre><code>git clone https://github.com/Zamiul-rashid/whiskerd &amp;&amp; cd whiskerd
+./install.sh</code></pre>
+      <button type="button" class="copy">Copy</button>
+    </div>
+  </div>
+
+  <div class="after">
+    <h3>Then</h3>
+    <ol>
+      <li>Start the daemon: <code>systemctl --user restart whiskerd</code>. It starts at every login after that.</li>
+      <li>On GNOME, log out and back in once, then run <code>gnome-extensions enable whiskerd@zamiul-rashid</code>.</li>
+      <li>Check what it finds: <code>whiskerd --probe</code>.</li>
+    </ol>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <img src="https://zamiul-rashid.github.io/whiskerd/img/mouse-128.png" alt="" width="40" height="40">
+  <p>whiskerd is MIT-licensed and runs on Linux only. <a href="https://github.com/Zamiul-rashid/whiskerd">Source on GitHub</a>.</p>
+  <p class="credit">Mouse icon from <a href="https://www.flaticon.com/free-icon/mouse_1682033">Flaticon</a>.
+    Fonts: Mochiy Pop One and Zen Maru Gothic (SIL Open Font License).</p>
+</footer>
+
+<script src="https://zamiul-rashid.github.io/whiskerd/copy.js?h=ffa8ccd386a51fea3446" defer></script>
+</body>
+</html>

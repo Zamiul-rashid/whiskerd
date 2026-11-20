@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+Allow: /
+Sitemap: https://zamiul-rashid.github.io/whiskerd/sitemap.xml

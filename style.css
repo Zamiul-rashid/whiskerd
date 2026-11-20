@@ -1,0 +1,577 @@
+/* whiskerd site: a sticker sheet. The page is the backing sheet, content sits on die-cut stickers
+   and label-maker strips. Pink is only for battery numbers and the mascot's own colours. */
+
+@font-face {
+  font-family: "Mochiy Pop One";
+  src: url("fonts/mochiy-pop-one-400.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Zen Maru Gothic";
+  src: url("fonts/zen-maru-gothic-500.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Zen Maru Gothic";
+  src: url("fonts/zen-maru-gothic-700.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Zen Maru Gothic";
+  src: url("fonts/zen-maru-gothic-900.woff2") format("woff2");
+  font-weight: 900;
+  font-display: swap;
+}
+
+:root {
+  --sheet: #b9c5d3;        /* backing sheet, from the mascot's body */
+  --sheet-deep: #7b8da2;   /* mascot's shaded side */
+  --paper: #ffffff;        /* sticker stock */
+  --ink: #1d2733;          /* mascot's nose */
+  --ink-soft: #34414f;
+  --tape: #2e3a48;
+  --pink: #ff9cb3;         /* ears, tail, battery numbers */
+  --panel: #14181e;        /* GNOME top bar */
+  --mark: rgba(29, 39, 51, 0.55);
+
+  --display: "Mochiy Pop One", "Zen Maru Gothic", system-ui, sans-serif;
+  --body: "Zen Maru Gothic", system-ui, sans-serif;
+  --mono: ui-monospace, "JetBrains Mono", "Cascadia Mono", "DejaVu Sans Mono", monospace;
+
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --lift: drop-shadow(0 1px 1px rgba(29, 39, 51, 0.22)) drop-shadow(0 8px 14px rgba(29, 39, 51, 0.16));
+  --lift-high: drop-shadow(0 2px 2px rgba(29, 39, 51, 0.2)) drop-shadow(0 18px 24px rgba(29, 39, 51, 0.22));
+
+  color-scheme: light;
+  accent-color: var(--ink);
+  scrollbar-color: var(--sheet-deep) var(--sheet);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 1rem; }
+
+body {
+  margin: 0;
+  padding-inline: var(--gutter);
+  color: var(--ink);
+  font: 500 1.0625rem/1.65 var(--body);
+  background-color: var(--sheet);
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* The release liner's printed lettering, full-bleed. It fades in below the hero so the headline
+   sits on clean ground and no phrase is ever cut at an edge. */
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url("img/liner.png") 0 0 / 340px 120px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, transparent 34rem, #000 52rem);
+  mask-image: linear-gradient(to bottom, transparent 0, transparent 34rem, #000 52rem);
+}
+@media (max-width: 52rem) {
+  body::before {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, transparent 62rem, #000 80rem);
+    mask-image: linear-gradient(to bottom, transparent 0, transparent 62rem, #000 80rem);
+  }
+}
+
+::selection { background: var(--tape); color: #fff; }
+
+a {
+  color: var(--ink);
+  text-decoration-thickness: 0.09em;
+  text-underline-offset: 0.2em;
+  text-decoration-color: rgba(29, 39, 51, 0.4);
+}
+a:hover { text-decoration-thickness: 0.16em; }
+
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+code, pre { font-family: var(--mono); font-size: 0.9em; }
+:not(pre) > code {
+  padding: 0.08em 0.4em;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.55);
+  /* never break inside a command: a long one scrolls in place instead */
+  display: inline-block;
+  max-width: 100%;
+  overflow-x: auto;
+  vertical-align: bottom;
+  white-space: nowrap;
+  line-height: 1.5;
+  scrollbar-width: thin;
+}
+
+h1, h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  margin: 0;
+}
+h3, h4 { font-weight: 900; margin: 0; line-height: 1.25; }
+
+.sr-only, .skip:not(:focus) {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+.skip:focus {
+  position: fixed; top: 1rem; left: 1rem; z-index: 10;
+  background: var(--paper); padding: 0.5rem 1rem; border-radius: 10px;
+}
+
+/* ---------- masthead ---------- */
+
+.masthead {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding-block: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+}
+.wordmark {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font: 400 1.35rem/1 var(--display);
+  text-decoration: none;
+}
+.masthead nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; font-weight: 700; }
+.masthead nav a { text-decoration: none; padding-block: 0.25rem; }
+.masthead nav a:hover { text-decoration: underline; text-decoration-color: rgba(29, 39, 51, 0.4); }
+
+/* ---------- the sheet: crop marks register each printed area ---------- */
+
+main { max-width: 72rem; margin: 0 auto; }
+
+.sheet {
+  position: relative;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  --m: 1px;
+  background:
+    linear-gradient(var(--mark), var(--mark)) left 0 top 10px / 22px var(--m) no-repeat,
+    linear-gradient(var(--mark), var(--mark)) left 10px top 0 / var(--m) 22px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) right 0 top 10px / 22px var(--m) no-repeat,
+    linear-gradient(var(--mark), var(--mark)) right 10px top 0 / var(--m) 22px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) left 0 bottom 10px / 22px var(--m) no-repeat,
+    linear-gradient(var(--mark), var(--mark)) left 10px bottom 0 / var(--m) 22px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) right 0 bottom 10px / 22px var(--m) no-repeat,
+    linear-gradient(var(--mark), var(--mark)) right 10px bottom 0 / var(--m) 22px no-repeat;
+}
+
+/* perforation between printed areas */
+.sheet + *, .facts + .sheet, .how + .sheet {
+  border-top: 2px dashed rgba(29, 39, 51, 0.28);
+}
+.sheet + *, .how + .sheet { margin-top: clamp(2.5rem, 6vw, 4.5rem); }
+
+/* ---------- hero ---------- */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4rem);
+  min-height: min(40rem, calc(100svh - 6rem));
+}
+.hero h1 { font-size: clamp(2.25rem, 4.3vw, 3.7rem); }
+.lede {
+  max-width: 34rem;
+  margin: 1.25rem 0 1.75rem;
+  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+  color: var(--ink-soft);
+}
+
+/* label-maker strip holding a command */
+.strip {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 34rem;
+  padding: 0.6rem 0.6rem 0.6rem 1.1rem;
+  background: var(--paper);
+  border-radius: 14px;
+  filter: var(--lift);
+}
+.strip > code {
+  flex: 1;
+  padding: 0;
+  background: none;
+  font-size: 1.05rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+.strip-block { align-items: flex-start; max-width: none; padding: 1rem 0.75rem 1rem 1.25rem; }
+.strip-block pre {
+  flex: 1;
+  margin: 0;
+  overflow-x: auto;
+  line-height: 1.7;
+  font-size: 0.88rem;
+  scrollbar-color: var(--sheet) transparent;
+}
+.strip-note { margin: 0.9rem 0 0; font-size: 0.97rem; color: var(--ink-soft); }
+
+.copy {
+  flex: none;
+  font: 700 0.9rem/1 var(--body);
+  color: var(--paper);
+  background: var(--ink);
+  border: 0;
+  border-radius: 999px;
+  padding: 0.6rem 1.05rem;
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.copy:hover { background: var(--tape); }
+.copy:active { transform: scale(0.96); }
+.copy[data-state="done"] { background: var(--sheet); color: var(--ink); }
+.copy[data-state="fail"] { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+
+.hero-art {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 31rem);
+  padding-bottom: 3rem;
+}
+.mascot {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: rotate(-5deg);
+  filter: var(--lift-high);
+}
+.topbar-sticker {
+  position: absolute;
+  left: -4%;
+  bottom: 3.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.05rem 0.55rem 0.85rem;
+  color: #eef1f5;
+  font: 700 0.95rem/1 var(--body);
+  background: var(--panel);
+  border-radius: 999px;
+  box-shadow: 0 0 0 7px var(--paper);
+  filter: var(--lift-high);
+  transform: rotate(4deg);
+  animation: settle 0.9s var(--ease) 0.25s both;
+}
+.topbar-sticker b { color: var(--pink); font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+.tb-caption {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+@keyframes settle {
+  from {
+    transform: translate(10px, -26px) rotate(11deg) scale(1.08);
+    filter: drop-shadow(0 4px 3px rgba(29, 39, 51, 0.16)) drop-shadow(0 34px 36px rgba(29, 39, 51, 0.24));
+  }
+}
+
+/* ---------- facts: small label stickers ---------- */
+
+.facts {
+  list-style: none;
+  margin: clamp(2rem, 5vw, 3rem) auto 0;
+  padding: clamp(2rem, 5vw, 3rem) 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem 1.25rem;
+  padding-inline: max(0px, calc((100% - 50rem) / 2));
+}
+.facts li {
+  padding: 0.55rem 1.1rem;
+  background: var(--paper);
+  border-radius: 999px;
+  font-weight: 700;
+  filter: var(--lift);
+}
+.facts li:nth-child(odd) { transform: rotate(-1.5deg); }
+.facts li:nth-child(even) { transform: rotate(1.2deg); }
+
+/* ---------- mice ---------- */
+
+.section-head { max-width: 46rem; }
+.section-head h2, .how h2, .install h2 { font-size: clamp(1.9rem, 3.4vw, 2.8rem); }
+.section-head > p { margin: 1rem 0 0; color: var(--ink-soft); }
+
+.legend {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.97rem;
+}
+.legend li { display: flex; align-items: center; gap: 0.7rem; }
+.legend li > span:last-child { flex: 1; }
+.chip {
+  flex: none;
+  width: 1.6rem;
+  height: 1.1rem;
+  border-radius: 5px;
+}
+.chip-tested { background: var(--paper); box-shadow: 0 2px 4px rgba(29, 39, 51, 0.25), inset 0 0 0 4px var(--paper), inset 0 0 0 9px var(--ink); }
+.chip-elsewhere { background: var(--paper); box-shadow: 0 2px 4px rgba(29, 39, 51, 0.25), inset 0 0 0 4px var(--paper), inset 0 0 0 9px var(--sheet-deep); }
+.chip-expected { border: 2px dashed var(--ink-soft); }
+
+.group { margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+.group-head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  gap: 0.25rem 1.25rem;
+}
+.group-head h3 { font-size: 1.35rem; }
+.ids { margin: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: baseline; font-size: 0.95rem; }
+.ids span { color: var(--ink-soft); }
+.group-how { grid-column: 1 / -1; margin: 0.3rem 0 0; max-width: 46rem; color: var(--ink-soft); font-size: 0.97rem; }
+
+.stickers {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  align-items: start;
+  gap: 1.5rem 1.75rem;
+}
+
+/* A white kiss-cut border traced around the alpha of mascot + label, then the lift. */
+.sticker-wrap {
+  --cut: drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff)
+    drop-shadow(0 -3px 0 #fff) drop-shadow(2px 2px 0 #fff) drop-shadow(-2px -2px 0 #fff)
+    drop-shadow(2px -2px 0 #fff) drop-shadow(-2px 2px 0 #fff);
+  position: relative;
+  filter: var(--cut) var(--lift);
+  transition: filter 0.35s var(--ease), transform 0.35s var(--ease);
+}
+.sticker-wrap:nth-child(4n + 1) { transform: rotate(-1.4deg); }
+.sticker-wrap:nth-child(4n + 2) { transform: rotate(1deg); }
+.sticker-wrap:nth-child(4n + 3) { transform: rotate(-0.5deg); }
+.sticker-wrap:nth-child(4n + 4) { transform: rotate(1.5deg); }
+
+.sticker {
+  position: relative;
+  padding-top: 40px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 100% 100%, 0 100%);
+  transition: clip-path 0.35s var(--ease);
+}
+.sticker img {
+  position: absolute;
+  top: 0;
+  left: 0.6rem;
+  width: 72px;
+  height: 72px;
+}
+.label {
+  padding: 2.6rem 1.2rem 1.15rem;
+  background: var(--paper);
+  border-radius: 18px;
+}
+.sticker h4, .dielines h4 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.15rem;
+  letter-spacing: -0.005em;
+}
+.ev {
+  display: inline-block;
+  margin: 0.5rem 0 0;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+.note { margin: 0.55rem 0 0; font-size: 0.9rem; line-height: 1.5; color: var(--ink-soft); }
+
+.ev-tested .ev { background: var(--ink); color: #fff; }
+.ev-elsewhere .ev { background: var(--sheet); color: var(--ink); }
+.ev-elsewhere .sticker img { filter: grayscale(1) contrast(1.05); }
+
+/* the signature interaction: printed stickers peel at the corner */
+.sticker-wrap::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, #f7f9fb 0%, #e3e8ee 48%, #c7d0da 60%, #b2bcc8 100%);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  border-radius: 0 0 0 6px;
+  transform: scale(0);
+  transform-origin: 100% 100%;
+  transition: transform 0.35s var(--ease);
+}
+@media (hover: hover) {
+  .sticker-wrap:hover,
+  .sticker-wrap:focus-within {
+    transform: rotate(0deg) translateY(-3px);
+    filter: var(--cut) var(--lift-high);
+  }
+  .sticker-wrap:hover .sticker,
+  .sticker-wrap:focus-within .sticker {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%);
+  }
+  .sticker-wrap:hover::after,
+  .sticker-wrap:focus-within::after { transform: scale(1); }
+}
+
+/* expected: the die line is cut, but nothing is printed on it yet */
+.dielines {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+.dielines li {
+  max-width: 21rem;
+  padding: 0.55rem 1rem 0.6rem;
+  border: 2px dashed rgba(29, 39, 51, 0.5);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.18);
+}
+.dielines h4 { font-size: 1rem; }
+.dielines .note { margin-top: 0.2rem; font-size: 0.85rem; }
+.stickers:not(:has(li)), .dielines:not(:has(li)) { display: none; }
+
+.group-foot { margin: 1.25rem 0 0; font-size: 0.92rem; color: var(--ink-soft); }
+.group-body > :first-child { margin-top: 1.5rem; }
+@media (min-width: 64rem) {
+  .group {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.75fr);
+    gap: 2.5rem;
+    align-items: start;
+  }
+  .group-head { grid-template-columns: 1fr; }
+  .group-body > :first-child { margin-top: 0.4rem; }
+  .group-foot { margin-top: 1rem; }
+}
+.missing {
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+  max-width: 46rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(29, 39, 51, 0.2);
+}
+
+/* ---------- how: label-maker tape ---------- */
+
+.how { padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.5rem, 4vw, 3rem) 0; }
+.how-intro { max-width: 40rem; margin: 1rem 0 2rem; color: var(--ink-soft); }
+
+.tape { margin: 0 0 2.25rem; }
+.tape figcaption { margin-bottom: 0.7rem; font-size: 0.97rem; }
+.bytes {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.45rem;
+  max-width: 100%;
+  padding: 0.85rem 2rem;
+  background: var(--tape);
+  color: #e9edf2;
+  font: 600 clamp(1rem, 1.6vw, 1.2rem)/1 var(--mono);
+  /* notched tape ends */
+  clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 50%, 100% 100%, 0 100%, 12px 50%);
+  filter: drop-shadow(0 3px 4px rgba(29, 39, 51, 0.25));
+}
+.bytes span { padding: 0.3rem 0.2rem; border-radius: 5px; }
+.bytes .hot { background: var(--pink); color: var(--ink); padding-inline: 0.45rem; }
+.bytes .tag { background: rgba(255, 255, 255, 0.16); }
+.decode { margin: 0.75rem 0 0; font-size: 0.95rem; color: var(--ink-soft); }
+.hot-text { background: var(--pink); color: var(--ink); padding: 0.05em 0.35em; border-radius: 5px; font-weight: 700; }
+.tag-text { background: rgba(255, 255, 255, 0.6); padding: 0.05em 0.35em; border-radius: 5px; font-weight: 700; }
+
+.json { max-width: 48rem; }
+.json pre {
+  margin: 0.75rem 0;
+  padding: 1rem 1.25rem;
+  background: var(--paper);
+  border-radius: 14px;
+  overflow-x: auto;
+  line-height: 1.7;
+  font-size: 0.86rem;
+  filter: var(--lift);
+}
+.json p { color: var(--ink-soft); }
+
+/* ---------- install ---------- */
+
+.install h2 { margin-bottom: 0.5rem; }
+.distro { margin-top: 2rem; }
+.distro h3, .after h3 { font-size: 1.2rem; margin-bottom: 0.6rem; }
+.distro p { margin: 0.4rem 0 0.8rem; max-width: 46rem; }
+.distro .strip + p { margin-top: 0.9rem; }
+.after { margin-top: 2.5rem; max-width: 46rem; }
+.after ol { margin: 0; padding-left: 1.4rem; }
+.after li { margin-bottom: 0.4rem; }
+.after li::marker { font-weight: 900; }
+
+/* ---------- footer ---------- */
+
+.foot {
+  max-width: 72rem;
+  margin: clamp(3rem, 7vw, 5rem) auto 0;
+  padding-block: 2rem 2.5rem;
+  border-top: 2px dashed rgba(29, 39, 51, 0.28);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 1rem;
+  align-items: center;
+  font-size: 0.93rem;
+}
+.foot img { grid-row: span 2; }
+.foot p { margin: 0; }
+.credit { color: var(--ink-soft); }
+
+/* ---------- narrow screens ---------- */
+
+@media (max-width: 52rem) {
+  .hero { grid-template-columns: 1fr; min-height: 0; }
+  .hero-art { width: min(100%, 24rem); order: -1; margin-bottom: 0.5rem; }
+  .topbar-sticker { left: 0; }
+  .group-head { grid-template-columns: 1fr; }
+}
+@media (max-width: 30rem) {
+  .strip { padding-left: 0.85rem; gap: 0.5rem; }
+  .strip > code { font-size: 0.86rem; }
+  .copy { padding: 0.55rem 0.8rem; }
+  .bytes { padding-inline: 1.2rem; gap: 0.25rem 0.3rem; font-size: 0.95rem; }
+  .bytes .hot { padding-inline: 0.3rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
