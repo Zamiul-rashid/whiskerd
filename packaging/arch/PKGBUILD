@@ -1,6 +1,6 @@
 # Maintainer: Zamiul Rashid <Zamiul-rashid@users.noreply.github.com>
 pkgname=whiskerd
-pkgver=0.1.0
+pkgver=0.2.0
 pkgrel=1
 pkgdesc="Wireless mouse battery levels in your status bar (Keychron, Ajazz/Compx dongles)"
 arch=('x86_64' 'aarch64')
