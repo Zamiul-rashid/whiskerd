@@ -1,0 +1,27 @@
+Architectures: amd64 arm64
+Codename: stable
+Components: main
+Date: Fri, 20 Nov 2026 16:59:28 +0000
+Label: whiskerd
+Origin: whiskerd
+Suite: stable
+MD5Sum:
+ b2883f003e6fde4c54ef23cee584a341              881 main/binary-amd64/Packages
+ cddd3b93f0c78b2e007c335170d7ba9e              619 main/binary-amd64/Packages.gz
+ 13d4d02f8329ae7d3ffe5afd8b8d3d16              881 main/binary-arm64/Packages
+ c68d08871f2145e1687930d8a19b9505              618 main/binary-arm64/Packages.gz
+SHA1:
+ c0426b2e35405ffc27f243de99c4379a36ed04b0              881 main/binary-amd64/Packages
+ a76cf36b420201b06c9cece06a06a46bbc848ef0              619 main/binary-amd64/Packages.gz
+ 6d6611d5023858aa3bbaee8c469969bd07f3a782              881 main/binary-arm64/Packages
+ a00be67e99d1165024d99c26aa99f0a115919edb              618 main/binary-arm64/Packages.gz
+SHA256:
+ 8da1e6777aaeb6fe69ff5a86f189ee2c5bd09b2338a4f88565c58158bbea489f              881 main/binary-amd64/Packages
+ c3db18722d41aa49e57862e4afa71ac5b040f0cbe26629103efa77588048ea26              619 main/binary-amd64/Packages.gz
+ 960f450509c4fea7a63ec469bb59927bd5576cd75804b69d02194f20d19bc7ee              881 main/binary-arm64/Packages
+ b3255cd84c3008da5857a3e41193a9ab4d72d99fec9aa6935b34c928da08034d              618 main/binary-arm64/Packages.gz
+SHA512:
+ 985e9bcb288ccdf090cbfd7056330c5d7c9407b638d493147afd8fdd384e5a293428d888dc7e1325c7efde37e9fa14e2d8716940a763d69ccdb296e7249e2d1b              881 main/binary-amd64/Packages
+ af9427b202eb0828d972bfbcde1866939f4180feac5f4b1d3e008af28cad82f7c7eab35931d02d0e23746847a049258b77fa4fe74477e81745fa06c567ecb968              619 main/binary-amd64/Packages.gz
+ 4c4bd246f3500f1d326a43cbed66d471a338b32dd5bbefeb6ba0d65804850f4164d279a2f99c36fa0dd0e32bfed11a1d9c525113a45f3a90281e83fde6734c82              881 main/binary-arm64/Packages
+ 33656c63cf86199e9e241e51c4a922b0adcfb6944073b6c18510b0227d73451646d5019e797789778c7fbc77f380a3b02f62791648ec6bf9bf65a4cd73c4cd42              618 main/binary-arm64/Packages.gz
